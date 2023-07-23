@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="本篇介紹了如何在網頁上設置下載按鈕：使用 HTML &lt;a&gt; download Attribute,通過 blob 下載圖片以及通過 blob 下載 txt 檔案。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在網頁上設置下載按鈕">
+<meta property="og:url" content="https://winnie0609.github.io/blog/2021-10-14/js-download-image/index.html">
+<meta property="og:site_name" content="Winnie&#39;s blog">
+<meta property="og:description" content="本篇介紹了如何在網頁上設置下載按鈕：使用 HTML &lt;a&gt; download Attribute,通過 blob 下載圖片以及通過 blob 下載 txt 檔案。">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2021-10-14T06:42:19.000Z">
+<meta property="article:modified_time" content="2023-07-22T08:14:05.628Z">
+<meta property="article:author" content="Winnie">
+<meta property="article:tag" content="js">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/blog/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>在網頁上設置下載按鈕</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"
+    ><i class="fa-solid fa-bars fa-lg"></i
+  ></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"
+    ><i class="fa-solid fa-bars fa-lg"></i
+  ></a>
+  <a
+    id="top-icon-tablet"
+    href="#"
+    aria-label="Top"
+    onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"
+    style="display: none"
+    ><i class="fa-solid fa-chevron-up fa-lg"></i
+  ></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       -->
+        <li>
+          <a href="/blog/"
+            >首頁</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a href="/blog/about/"
+            >關於</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a href="/blog/archives/"
+            >文章</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a target="_blank" rel="noopener" href="http://github.com/winnie0609"
+            >專案</a
+          >
+        </li>
+        <!--
+     -->
+      </ul>
+    </span>
+    <br />
+    <span id="actions">
+      <ul>
+         
+        <li>
+          <a
+            class="icon"
+            aria-label="下一篇"
+            href="/blog/2021-08-29/vue-i18n/"
+            ><i
+              class="fa-solid fa-chevron-right"
+              aria-hidden="true"
+              onmouseover="$('#i-next').toggle();"
+              onmouseout="$('#i-next').toggle();"
+            ></i
+          ></a>
+        </li>
+        
+        <li>
+          <a
+            class="icon"
+            aria-label="回到頁首"
+            href="#"
+            onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"
+            ><i
+              class="fa-solid fa-chevron-up"
+              aria-hidden="true"
+              onmouseover="$('#i-top').toggle();"
+              onmouseout="$('#i-top').toggle();"
+            ></i
+          ></a>
+        </li>
+        <li>
+          <a class="icon" aria-label="分享" href="#"
+            ><i
+              class="fa-solid fa-share-alt"
+              aria-hidden="true"
+              onmouseover="$('#i-share').toggle();"
+              onmouseout="$('#i-share').toggle();"
+              onclick="$('#share').toggle();return false;"
+            ></i
+          ></a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display: none"
+        >上一篇</span
+      >
+      <span id="i-next" class="info" style="display: none"
+        >下一篇</span
+      >
+      <span id="i-top" class="info" style="display: none"
+        >回到頁首</span
+      >
+      <span id="i-share" class="info" style="display: none"
+        >分享</span
+      >
+    </span>
+    <br />
+    <div id="share" style="display: none">
+      <ul>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://winnie0609.github.io/blog/2021-10-14/js-download-image/"
+      ><i class="fab fa-facebook " aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://twitter.com/share?url=https://winnie0609.github.io/blog/2021-10-14/js-download-image/&text=在網頁上設置下載按鈕"
+      ><i class="fab fa-twitter " aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://winnie0609.github.io/blog/2021-10-14/js-download-image/&title=在網頁上設置下載按鈕"
+      ><i class="fab fa-linkedin " aria-hidden="true"></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://winnie0609.github.io/blog/2021-10-14/js-download-image/&is_video=false&description=在網頁上設置下載按鈕"
+      ><i class="fab fa-pinterest " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <li>
+    <a
+      class="icon"
+      href="mailto:?subject=在網頁上設置下載按鈕&body=Check out this article: https://winnie0609.github.io/blog/2021-10-14/js-download-image/"
+      ><i
+        class="fa-solid fa-envelope "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://winnie0609.github.io/blog/2021-10-14/js-download-image/&title=在網頁上設置下載按鈕"
+      ><i
+        class="fab fa-get-pocket "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://winnie0609.github.io/blog/2021-10-14/js-download-image/&title=在網頁上設置下載按鈕"
+      ><i class="fab fa-reddit " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://winnie0609.github.io/blog/2021-10-14/js-download-image/&title=在網頁上設置下載按鈕"
+      ><i
+        class="fab fa-stumbleupon "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://digg.com/submit?url=https://winnie0609.github.io/blog/2021-10-14/js-download-image/&title=在網頁上設置下載按鈕"
+      ><i class="fab fa-digg " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://winnie0609.github.io/blog/2021-10-14/js-download-image/&name=在網頁上設置下載按鈕&description="
+      ><i class="fab fa-tumblr " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://winnie0609.github.io/blog/2021-10-14/js-download-image/&t=在網頁上設置下載按鈕"
+      ><i
+        class="fab fa-hacker-news "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+</ul>
+
+    </div>
+     
+    <div id="toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E7%AF%87%E5%A4%A7%E7%B6%B1"><span class="toc-number">1.</span> <span class="toc-text">本篇大綱</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B0%A1%E4%BB%8B"><span class="toc-number">2.</span> <span class="toc-text">簡介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">作法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%9C%E6%B3%95-1%EF%BC%9A%E4%BD%BF%E7%94%A8-HTMLdownload-attribute"><span class="toc-number">3.1.</span> <span class="toc-text">作法 1：使用 HTML&lt;a&gt;download attribute</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%9C%E6%B3%95-2%EF%BC%9A%E9%80%9A%E9%81%8E-blob-%E7%9A%84%E6%96%B9%E5%BC%8F%E7%9B%B4%E6%8E%A5%E5%84%B2%E5%AD%98%E5%9C%96%E7%89%87"><span class="toc-number">3.2.</span> <span class="toc-text">作法 2：通過 blob 的方式直接儲存圖片</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%9C%E6%B3%95-3%EF%BC%9A%E4%B8%8B%E8%BC%89-text-file"><span class="toc-number">3.3.</span> <span class="toc-text">作法 3：下載 text file</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%A6%E9%9A%9B%E4%BD%BF%E7%94%A8%E6%A1%88%E4%BE%8B"><span class="toc-number">4.</span> <span class="toc-text">實際使用案例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%83%E8%80%83%E8%B3%87%E6%96%99"><span class="toc-number">5.</span> <span class="toc-text">參考資料</span></a></li></ol></div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        在網頁上設置下載按鈕
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Winnie</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-10-14T06:42:19.000Z" class="dt-published" itemprop="datePublished">2021-10-14</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/blog/tags/js/" rel="tag">js</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="本篇大綱"><a href="#本篇大綱" class="headerlink" title="本篇大綱"></a>本篇大綱</h2><ol>
+<li>簡介</li>
+<li>使用 HTML<code>&lt;a&gt;</code>download Attribute</li>
+<li>通過 blob 下載圖片</li>
+<li>通過 blob 下載 txt 檔案</li>
+</ol>
+<h2 id="簡介"><a href="#簡介" class="headerlink" title="簡介"></a>簡介</h2><p>稍微記錄如何在網頁上設置下載按鈕。第一個方式為使用 HTML<code>&lt;a&gt;</code>tag 原先提供的 download 屬性，但它有其限制性。另一個方法則為通過 blob 物件讓使用者能夠直接儲存檔案。</p>
+<p>Codepen Live Demo: <a target="_blank" rel="noopener" href="https://codepen.io/huiniong/pen/rNzxoZq">Download file buttons</a></p>
+<h2 id="作法"><a href="#作法" class="headerlink" title="作法"></a>作法</h2><h3 id="作法-1：使用-HTMLdownload-attribute"><a href="#作法-1：使用-HTMLdownload-attribute" class="headerlink" title="作法 1：使用 HTML&lt;a&gt;download attribute"></a>作法 1：使用 HTML<code>&lt;a&gt;</code>download attribute</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;a</span><br><span class="line">  href=<span class="string">&quot;https://i.imgflip.com/5qptjs.jpg&quot;</span></span><br><span class="line">  download=<span class="string">&quot;meme-filename&quot;</span></span><br><span class="line">  target=<span class="string">&quot;_blank&quot;</span></span><br><span class="line">&gt;</span><br><span class="line">  <span class="title class_">Download</span></span><br><span class="line">&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+
+<p>這裡以圖片下載為例。使用<code>&lt;a&gt;</code>的 download attribute 直接下載是最方便的方式。某些情況下，需要提供使用者下載的不是已經存在的檔案，而是一個連結，使用<code>&lt;a&gt;</code>tag 會出現這個狀況：<code>&lt;a&gt;</code>tag 在被點擊後，瀏覽器會打開檔案，使用者需要手動儲存檔案。</p>
+<hr>
+<h3 id="作法-2：通過-blob-的方式直接儲存圖片"><a href="#作法-2：通過-blob-的方式直接儲存圖片" class="headerlink" title="作法 2：通過 blob 的方式直接儲存圖片"></a>作法 2：通過 blob 的方式直接儲存圖片</h3><p>可以通過操作 blob 物件來達到按鈕在被點擊後，儲存檔案的框框跳出，讓使用者直接儲存檔案的效果。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;button <span class="keyword">class</span>=<span class="string">&quot;image-blob-button&quot;</span>&gt;<span class="title class_">Download</span>&lt;/button&gt;</span><br></pre></td></tr></table></figure>
+
+<p>首先 fetch 需要下載的 URL 獲得 blob, 接著使用 URL.createObjectURL 來創建 objectURL. 這時候回傳的結果會是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;blob:https://cdpn.io/211925a7-4b2e-42a7-b2f0-6fc043dc7bbe&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>接著創造<code>&lt;a&gt;</code>tag, 其下載連結為剛剛創造出來的 objectURL. 檔名可以使用 <code>.download</code> 來設定。接下來將創造好的連結塞到 body 內，再觸發它就可以達到想要的效果了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> imageBlobButton = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;.image-blob-button&#x27;</span>);</span><br><span class="line">imageBlobButton.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, downloadImage);</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">downloadImage</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// fetch the image blob</span></span><br><span class="line">  <span class="keyword">const</span> url = <span class="string">&#x27;https://i.imgflip.com/5qptjs.jpg&#x27;</span>;</span><br><span class="line">  <span class="keyword">const</span> response = <span class="keyword">await</span> <span class="title function_">fetch</span>(url);</span><br><span class="line">  <span class="keyword">const</span> blob = <span class="keyword">await</span> response.<span class="title function_">blob</span>();</span><br><span class="line"></span><br><span class="line">  <span class="comment">// create an objectURL</span></span><br><span class="line">  <span class="keyword">const</span> blobURL = <span class="variable constant_">URL</span>.<span class="title function_">createObjectURL</span>(blob);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// set &lt;a&gt; tag&#x27;s href to blob url</span></span><br><span class="line">  <span class="keyword">const</span> link = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;a&#x27;</span>);</span><br><span class="line">  link.<span class="property">href</span> = blobURL;</span><br><span class="line">  link.<span class="property">download</span> = <span class="string">&#x27;meme&#x27;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Append link and trigger the download</span></span><br><span class="line">  <span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">appendChild</span>(link);</span><br><span class="line">  link.<span class="title function_">click</span>();</span><br><span class="line">  <span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">removeChild</span>(link);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="作法-3：下載-text-file"><a href="#作法-3：下載-text-file" class="headerlink" title="作法 3：下載 text file"></a>作法 3：下載 text file</h3><p>如果要下載 txt 檔案，或是將特定的字串轉換成 txt 檔案下載，使用的方法與剛才提到的方式類似。這裡下載不是 url 而是一個字串 &#x2F; 檔案，因此要先創造一個新的 blob 物件，其餘包括取得 objectURL 的方式和觸發點擊的寫法則與 url 的相同。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> context = <span class="string">&quot;helllo, let&#x27;s download some text!&quot;</span>;</span><br><span class="line"><span class="keyword">const</span> txtBlobButton = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;.txt-blob-button&#x27;</span>);</span><br><span class="line">txtBlobButton.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, downloadTxt);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">downloadTxt</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// first argument should be array</span></span><br><span class="line">  blob = <span class="keyword">new</span> <span class="title class_">Blob</span>([context], &#123; <span class="attr">type</span>: <span class="string">&#x27;text/plain&#x27;</span> &#125;);</span><br><span class="line">  <span class="keyword">let</span> blobUrl = <span class="variable constant_">URL</span>.<span class="title function_">createObjectURL</span>(blob);</span><br><span class="line">  <span class="keyword">let</span> link = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;a&#x27;</span>);</span><br><span class="line"></span><br><span class="line">  link.<span class="property">href</span> = blobUrl;</span><br><span class="line">  link.<span class="property">download</span> = <span class="string">&#x27;text&#x27;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">appendChild</span>(link);</span><br><span class="line">  link.<span class="title function_">click</span>();</span><br><span class="line">  <span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">removeChild</span>(link);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="實際使用案例"><a href="#實際使用案例" class="headerlink" title="實際使用案例"></a>實際使用案例</h2><p>之前在實習專案開發中遇到需要設置下載按鈕的功能，找到了這個解法，又想起之前做過的迷因小作品能夠用上，所以就把他加進去啦。迷因在製作好後，會回傳該迷因的鏈接，因此就可以通過 blob 的方式來讓用戶下載圖片。</p>
+<p>順道一提，這是剛剛開始學 React 時候寫的小東西，半年後再看回覺得真的是有很大很大很大的進步空間啊。</p>
+<p>Github repo: <a target="_blank" rel="noopener" href="https://github.com/Winnie0609/meme-generator">Winnie0609&#x2F;meme-generator</a><br>Live Demo: <a href="https://winnie0609.github.io/meme-generator/">Mene Generator</a></p>
+<hr>
+<h2 id="參考資料"><a href="#參考資料" class="headerlink" title="參考資料"></a>參考資料</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://dev.to/eckhardtd/downloading-images-in-the-browser-with-node-js-4f0h">Downloading images in the browser with Node.js</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/Blob">Blob</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.w3schools.com/tags/att_a_download.asp">W3 school HTML<code>&lt;a&gt;</code>download Attribute</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/161000123">Blob-对象介绍</a></li>
+</ol>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/blog/">首頁</a></li>
+        
+          <li><a href="/blog/about/">關於</a></li>
+        
+          <li><a href="/blog/archives/">文章</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/winnie0609">專案</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E7%AF%87%E5%A4%A7%E7%B6%B1"><span class="toc-number">1.</span> <span class="toc-text">本篇大綱</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B0%A1%E4%BB%8B"><span class="toc-number">2.</span> <span class="toc-text">簡介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">作法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%9C%E6%B3%95-1%EF%BC%9A%E4%BD%BF%E7%94%A8-HTMLdownload-attribute"><span class="toc-number">3.1.</span> <span class="toc-text">作法 1：使用 HTML&lt;a&gt;download attribute</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%9C%E6%B3%95-2%EF%BC%9A%E9%80%9A%E9%81%8E-blob-%E7%9A%84%E6%96%B9%E5%BC%8F%E7%9B%B4%E6%8E%A5%E5%84%B2%E5%AD%98%E5%9C%96%E7%89%87"><span class="toc-number">3.2.</span> <span class="toc-text">作法 2：通過 blob 的方式直接儲存圖片</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%9C%E6%B3%95-3%EF%BC%9A%E4%B8%8B%E8%BC%89-text-file"><span class="toc-number">3.3.</span> <span class="toc-text">作法 3：下載 text file</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%A6%E9%9A%9B%E4%BD%BF%E7%94%A8%E6%A1%88%E4%BE%8B"><span class="toc-number">4.</span> <span class="toc-text">實際使用案例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%83%E8%80%83%E8%B3%87%E6%96%99"><span class="toc-number">5.</span> <span class="toc-text">參考資料</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://winnie0609.github.io/blog/2021-10-14/js-download-image/"
+      ><i class="fab fa-facebook fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://twitter.com/share?url=https://winnie0609.github.io/blog/2021-10-14/js-download-image/&text=在網頁上設置下載按鈕"
+      ><i class="fab fa-twitter fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://winnie0609.github.io/blog/2021-10-14/js-download-image/&title=在網頁上設置下載按鈕"
+      ><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://winnie0609.github.io/blog/2021-10-14/js-download-image/&is_video=false&description=在網頁上設置下載按鈕"
+      ><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <li>
+    <a
+      class="icon"
+      href="mailto:?subject=在網頁上設置下載按鈕&body=Check out this article: https://winnie0609.github.io/blog/2021-10-14/js-download-image/"
+      ><i
+        class="fa-solid fa-envelope fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://winnie0609.github.io/blog/2021-10-14/js-download-image/&title=在網頁上設置下載按鈕"
+      ><i
+        class="fab fa-get-pocket fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://winnie0609.github.io/blog/2021-10-14/js-download-image/&title=在網頁上設置下載按鈕"
+      ><i class="fab fa-reddit fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://winnie0609.github.io/blog/2021-10-14/js-download-image/&title=在網頁上設置下載按鈕"
+      ><i
+        class="fab fa-stumbleupon fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://digg.com/submit?url=https://winnie0609.github.io/blog/2021-10-14/js-download-image/&title=在網頁上設置下載按鈕"
+      ><i class="fab fa-digg fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://winnie0609.github.io/blog/2021-10-14/js-download-image/&name=在網頁上設置下載按鈕&description="
+      ><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://winnie0609.github.io/blog/2021-10-14/js-download-image/&t=在網頁上設置下載按鈕"
+      ><i
+        class="fab fa-hacker-news fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 選單</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 文章目錄</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 頁首</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    &copy;
+    
+    
+    2023
+    Winnie 
+    | Powered by <a href="hexo.io/">Hexo</a> & <a target="_blank" rel="noopener" href="https://github.com/probberechts/hexo-theme-cactus">Cactus</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/blog/">首頁</a></li><!--
+     --><!--
+       --><li><a href="/blog/about/">關於</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">文章</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/winnie0609">專案</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"複製\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "已複製！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

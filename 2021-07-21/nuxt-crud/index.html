@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Nuxt.js 搭配 Vuex 實作 CRUD.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nuxt.js 搭配 Vuex 實作 CRUD">
+<meta property="og:url" content="https://winnie0609.github.io/blog/2021-07-21/nuxt-crud/index.html">
+<meta property="og:site_name" content="Winnie&#39;s blog">
+<meta property="og:description" content="Nuxt.js 搭配 Vuex 實作 CRUD.">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://i.imgur.com/xtfsD3p.png">
+<meta property="article:published_time" content="2021-07-20T17:04:53.000Z">
+<meta property="article:modified_time" content="2023-07-22T17:46:18.053Z">
+<meta property="article:author" content="Winnie">
+<meta property="article:tag" content="nuxt">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/xtfsD3p.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/blog/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Nuxt.js 搭配 Vuex 實作 CRUD</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"
+    ><i class="fa-solid fa-bars fa-lg"></i
+  ></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"
+    ><i class="fa-solid fa-bars fa-lg"></i
+  ></a>
+  <a
+    id="top-icon-tablet"
+    href="#"
+    aria-label="Top"
+    onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"
+    style="display: none"
+    ><i class="fa-solid fa-chevron-up fa-lg"></i
+  ></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       -->
+        <li>
+          <a href="/blog/"
+            >首頁</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a href="/blog/about/"
+            >關於</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a href="/blog/archives/"
+            >文章</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a target="_blank" rel="noopener" href="http://github.com/winnie0609"
+            >專案</a
+          >
+        </li>
+        <!--
+     -->
+      </ul>
+    </span>
+    <br />
+    <span id="actions">
+      <ul>
+        
+        <li>
+          <a
+            class="icon"
+            aria-label="上一篇"
+            href="/blog/2021-08-29/vue-i18n/"
+            ><i
+              class="fa-solid fa-chevron-left"
+              aria-hidden="true"
+              onmouseover="$('#i-prev').toggle();"
+              onmouseout="$('#i-prev').toggle();"
+            ></i
+          ></a>
+        </li>
+         
+        <li>
+          <a
+            class="icon"
+            aria-label="下一篇"
+            href="/blog/2021-06-20/js-this/"
+            ><i
+              class="fa-solid fa-chevron-right"
+              aria-hidden="true"
+              onmouseover="$('#i-next').toggle();"
+              onmouseout="$('#i-next').toggle();"
+            ></i
+          ></a>
+        </li>
+        
+        <li>
+          <a
+            class="icon"
+            aria-label="回到頁首"
+            href="#"
+            onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"
+            ><i
+              class="fa-solid fa-chevron-up"
+              aria-hidden="true"
+              onmouseover="$('#i-top').toggle();"
+              onmouseout="$('#i-top').toggle();"
+            ></i
+          ></a>
+        </li>
+        <li>
+          <a class="icon" aria-label="分享" href="#"
+            ><i
+              class="fa-solid fa-share-alt"
+              aria-hidden="true"
+              onmouseover="$('#i-share').toggle();"
+              onmouseout="$('#i-share').toggle();"
+              onclick="$('#share').toggle();return false;"
+            ></i
+          ></a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display: none"
+        >上一篇</span
+      >
+      <span id="i-next" class="info" style="display: none"
+        >下一篇</span
+      >
+      <span id="i-top" class="info" style="display: none"
+        >回到頁首</span
+      >
+      <span id="i-share" class="info" style="display: none"
+        >分享</span
+      >
+    </span>
+    <br />
+    <div id="share" style="display: none">
+      <ul>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://winnie0609.github.io/blog/2021-07-21/nuxt-crud/"
+      ><i class="fab fa-facebook " aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://twitter.com/share?url=https://winnie0609.github.io/blog/2021-07-21/nuxt-crud/&text=Nuxt.js 搭配 Vuex 實作 CRUD"
+      ><i class="fab fa-twitter " aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://winnie0609.github.io/blog/2021-07-21/nuxt-crud/&title=Nuxt.js 搭配 Vuex 實作 CRUD"
+      ><i class="fab fa-linkedin " aria-hidden="true"></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://winnie0609.github.io/blog/2021-07-21/nuxt-crud/&is_video=false&description=Nuxt.js 搭配 Vuex 實作 CRUD"
+      ><i class="fab fa-pinterest " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <li>
+    <a
+      class="icon"
+      href="mailto:?subject=Nuxt.js 搭配 Vuex 實作 CRUD&body=Check out this article: https://winnie0609.github.io/blog/2021-07-21/nuxt-crud/"
+      ><i
+        class="fa-solid fa-envelope "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://winnie0609.github.io/blog/2021-07-21/nuxt-crud/&title=Nuxt.js 搭配 Vuex 實作 CRUD"
+      ><i
+        class="fab fa-get-pocket "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://winnie0609.github.io/blog/2021-07-21/nuxt-crud/&title=Nuxt.js 搭配 Vuex 實作 CRUD"
+      ><i class="fab fa-reddit " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://winnie0609.github.io/blog/2021-07-21/nuxt-crud/&title=Nuxt.js 搭配 Vuex 實作 CRUD"
+      ><i
+        class="fab fa-stumbleupon "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://digg.com/submit?url=https://winnie0609.github.io/blog/2021-07-21/nuxt-crud/&title=Nuxt.js 搭配 Vuex 實作 CRUD"
+      ><i class="fab fa-digg " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://winnie0609.github.io/blog/2021-07-21/nuxt-crud/&name=Nuxt.js 搭配 Vuex 實作 CRUD&description="
+      ><i class="fab fa-tumblr " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://winnie0609.github.io/blog/2021-07-21/nuxt-crud/&t=Nuxt.js 搭配 Vuex 實作 CRUD"
+      ><i
+        class="fab fa-hacker-news "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+</ul>
+
+    </div>
+     
+    <div id="toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E7%AF%87%E5%A4%A7%E7%B6%B1"><span class="toc-number">1.</span> <span class="toc-text">本篇大綱</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B0%A1%E4%BB%8B"><span class="toc-number">2.</span> <span class="toc-text">簡介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E4%BD%9C%E6%A5%AD"><span class="toc-number">3.</span> <span class="toc-text">前置作業</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E5%A2%9E-Nuxt-%E5%B0%88%E6%A1%88"><span class="toc-number">3.1.</span> <span class="toc-text">新增 Nuxt 專案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BA%96%E5%82%99%E8%B3%87%E6%96%99"><span class="toc-number">3.2.</span> <span class="toc-text">準備資料</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A8%AD%E5%AE%9A-UI"><span class="toc-number">3.3.</span> <span class="toc-text">設定 UI</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Vuex-%E8%A8%AD%E5%AE%9A"><span class="toc-number">4.</span> <span class="toc-text">Vuex 設定</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#State"><span class="toc-number">4.1.</span> <span class="toc-text">State</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Action"><span class="toc-number">4.2.</span> <span class="toc-text">Action</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mutation"><span class="toc-number">4.3.</span> <span class="toc-text">Mutation</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CRUD-%E5%8A%9F%E8%83%BD"><span class="toc-number">5.</span> <span class="toc-text">CRUD 功能</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Read-%E8%AE%80%E5%8F%96"><span class="toc-number">5.1.</span> <span class="toc-text">Read 讀取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-%E5%A2%9E%E5%8A%A0"><span class="toc-number">5.2.</span> <span class="toc-text">Create 增加</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Update-%E6%9B%B4%E6%96%B0"><span class="toc-number">5.3.</span> <span class="toc-text">Update 更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Delete-%E5%88%AA%E9%99%A4"><span class="toc-number">5.4.</span> <span class="toc-text">Delete 刪除</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E5%B0%8F%E7%AD%86%E8%A8%98"><span class="toc-number">6.</span> <span class="toc-text">其他小筆記</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%A8%E5%B1%80%E5%BC%95%E5%85%A5-CSS"><span class="toc-number">6.1.</span> <span class="toc-text">全局引入 CSS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#methods-%E8%A3%A1%E7%9A%84-function"><span class="toc-number">6.2.</span> <span class="toc-text">methods 裡的 function</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%E5%88%B0-github-page"><span class="toc-number">6.3.</span> <span class="toc-text">部署到 github page</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%B5%90"><span class="toc-number">7.</span> <span class="toc-text">小結</span></a></li></ol></div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Nuxt.js 搭配 Vuex 實作 CRUD
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Winnie</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-07-20T17:04:53.000Z" class="dt-published" itemprop="datePublished">2021-07-21</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/blog/tags/nuxt/" rel="tag">nuxt</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="本篇大綱"><a href="#本篇大綱" class="headerlink" title="本篇大綱"></a>本篇大綱</h2><ol>
+<li>簡介</li>
+<li>前置作業</li>
+<li>Vuex 設定</li>
+<li>CRUD 功能</li>
+<li>其他小筆記</li>
+</ol>
+<h2 id="簡介"><a href="#簡介" class="headerlink" title="簡介"></a>簡介</h2><p>這是一個 Nuxt 搭配 Vuex 的 CRUD 栗子。<br><a target="_blank" rel="noopener" href="https://github.com/Winnie0609/crud-vue">Source code</a> | <a href="https://winnie0609.github.io/crud-vue/">Live Demo</a></p>
+<h2 id="前置作業"><a href="#前置作業" class="headerlink" title="前置作業"></a>前置作業</h2><h3 id="新增-Nuxt-專案"><a href="#新增-Nuxt-專案" class="headerlink" title="新增 Nuxt 專案"></a>新增 Nuxt 專案</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx create-nuxt-app crud-app</span><br></pre></td></tr></table></figure>
+
+<p>在輸入指令後會提供幾個項目的選擇，包括服務器端框架、UI 框架、測試框架、Nuxt 模式等。這裡的 UI 框架選擇的是 Vuetify.js.</p>
+<h3 id="準備資料"><a href="#準備資料" class="headerlink" title="準備資料"></a>準備資料</h3><p>這裡使用了 <a target="_blank" rel="noopener" href="https://jsonplaceholder.typicode.com/guide/">JSONPlaceholder</a> 提供的 API. 裡面提供的例子使用 <code>fetch</code>， 所以在這個例子裡，就可以直接 <del>抄起來</del> 使用. 要注意的是：這個 API 在發送新增 &#x2F; 更新 &#x2F; 刪除的 request 時並不會真的更改原本的資料。</p>
+<h3 id="設定-UI"><a href="#設定-UI" class="headerlink" title="設定 UI"></a>設定 UI</h3><p>這裡需要的 UI 只有 form, card, button, 直接套用 Vuetify 裡的模板。</p>
+<h2 id="Vuex-設定"><a href="#Vuex-設定" class="headerlink" title="Vuex 設定"></a>Vuex 設定</h2><p>Vuex 是類似 Redux 的 state 集中管理器。這裡的 state 比較單純，只有我們設定的 <code>posts</code> 一項，用來儲存每筆的資料。</p>
+<p>這裡會用到 Vuex 的功能包含了： state, mutation, action. 因為 Nuxt 已經幫忙處理 Vuex 後面的東西，所以只要按照 <a target="_blank" rel="noopener" href="https://nuxtjs.org/docs/2.x/directory-structure/store">文件</a> 上的方式使用就可以了。</p>
+<p>Vuex 的檔案會放在 <code>store</code> 底下。</p>
+<h3 id="State"><a href="#State" class="headerlink" title="State"></a>State</h3><p>這裡創造了一個 <code>posts</code> 為空 array, 用來儲存資料。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//index.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">state</span> = (<span class="params"></span>) =&gt; (&#123;</span><br><span class="line">  <span class="attr">posts</span>: [],</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="Action"><a href="#Action" class="headerlink" title="Action"></a>Action</h3><p>要執行的動作會在 action 裡處理. Action 並不會直接改變 state， 而是會提交 mutation，由 mutation 來改變 state.</p>
+<p>Action 會通過 <code>store.dispatch</code> 被觸發，會在<br>Nuxt 的 methods 中 dispatch。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//example</span></span><br><span class="line"></span><br><span class="line"><span class="attr">methods</span>: &#123;</span><br><span class="line">    <span class="keyword">async</span> createPost () &#123;</span><br><span class="line">      <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="property">$store</span>.<span class="title function_">dispatch</span>(<span class="string">&#x27;createPost&#x27;</span>, &#123; <span class="attr">title</span>: <span class="variable language_">this</span>.<span class="property">title</span>, <span class="attr">body</span>: <span class="variable language_">this</span>.<span class="property">body</span> &#125;)</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">title</span> = <span class="string">&#x27;&#x27;</span></span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">body</span> = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>dispatch 的第二個參數是我們想要傳到 action 的參數。如果要傳多個參數就要將他們包成一個 object 往下傳，因為 action 只能接受 1 個參數。</p>
+<p>action 在接收參數時候，要注意參數位置。第一個參數：內建的參數，如 commit &#x2F; state；第二個參數：自己要往下傳的參數。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//錯誤例子</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> actions = &#123;</span><br><span class="line">  <span class="keyword">async</span> <span class="title function_">createPost</span>(<span class="params">&#123; commit, title, body &#125;</span>) &#123;</span><br><span class="line">    <span class="comment">// 這裡會是兩個參數不是一個：</span></span><br><span class="line">    <span class="comment">// async createPost (&#123;commit&#125;, &#123;title, body&#125;)</span></span><br><span class="line">    <span class="comment">//rest of the code</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Mutation"><a href="#Mutation" class="headerlink" title="Mutation"></a>Mutation</h3><p>Mutation 是最為底層的操作，比如說，「把某個變數改成 true」、「把這筆資料塞到 array 裡」的操作。因此在命名上也要以改 function 做了什麼為標準，才能做到最大程度的重複使用和避免混淆。</p>
+<h2 id="CRUD-功能"><a href="#CRUD-功能" class="headerlink" title="CRUD 功能"></a>CRUD 功能</h2><p>CRUD 的功能包括新增 (Create), 讀取 (Read), 更新 (Update) 和 刪除 (Delete). JSONplaceholder 提供了這四個方法但因為發送的請求不會改變原本的資料，所以其實都是在操作自己的 array.</p>
+<h3 id="Read-讀取"><a href="#Read-讀取" class="headerlink" title="Read 讀取"></a>Read 讀取</h3><p>在執行其他 function 前，會先將資料抓取下來，所以這個步驟會放在 Nuxt <code>mounted()</code> 裡。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//index.vue</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> mounted () &#123;</span><br><span class="line">  <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="property">$store</span>.<span class="title function_">dispatch</span>(<span class="string">&#x27;initPost&#x27;</span>)</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+<p>Action 中的 init post 會發送請求，data 會是 100 筆的資料。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//index.js</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> actions = &#123;</span><br><span class="line">  <span class="comment">//commit 是 action 自帶的參數</span></span><br><span class="line">  <span class="keyword">async</span> <span class="title function_">initPost</span>(<span class="params">&#123; commit &#125;</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="title function_">fetch</span>(<span class="string">&#x27;https://jsonplaceholder.typicode.com/posts&#x27;</span>);</span><br><span class="line">    <span class="keyword">const</span> data = <span class="keyword">await</span> res.<span class="title function_">json</span>();</span><br><span class="line">    data.<span class="title function_">forEach</span>(<span class="function">(<span class="params">item</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="comment">//每筆資料都需要 show 這個變數，用來控制是一般狀態 / 可編輯狀態</span></span><br><span class="line">      item.<span class="property">show</span> = <span class="literal">true</span>;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="title function_">commit</span>(<span class="string">&#x27;setPosts&#x27;</span>, data);</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">//rest of the code</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//index.js</span></span><br><span class="line"><span class="comment">//把 posts 設成 action 抓下來的 data</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> mutations = &#123;</span><br><span class="line">  <span class="title function_">setPosts</span>(<span class="params">state, data</span>) &#123;</span><br><span class="line">    state.<span class="property">posts</span> = data;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">//rest of the code</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Create-增加"><a href="#Create-增加" class="headerlink" title="Create 增加"></a>Create 增加</h3><p>提供用戶輸入 title 和 body 兩個部分。需要把用戶輸入的 title 和 body 都往下傳。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//index.vue</span></span><br><span class="line"></span><br><span class="line"><span class="attr">methods</span>: &#123;</span><br><span class="line">  <span class="keyword">async</span> createPost () &#123;</span><br><span class="line">    <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="property">$store</span>.<span class="title function_">dispatch</span>(<span class="string">&#x27;createPost&#x27;</span>, &#123; <span class="attr">title</span>: <span class="variable language_">this</span>.<span class="property">title</span>, <span class="attr">body</span>: <span class="variable language_">this</span>.<span class="property">body</span> &#125;)</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">title</span> = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">body</span> = <span class="string">&#x27;&#x27;</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">//rest of the code</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>每則 comment 的 id 使用亂數產生。這裡發送的 request 並不會直接更新到原本的資料，只會把這筆資料加到 <code>posts</code> 裡。 與前面的相同，這裡需要為新增的資料加上 <code>show</code> 變數。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//index.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> actions = &#123;</span><br><span class="line">  <span class="comment">//rest of the code</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">async</span> <span class="title function_">createPost</span>(<span class="params">&#123; commit &#125;, &#123; title, body &#125;</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="title function_">fetch</span>(<span class="string">&#x27;https://jsonplaceholder.typicode.com/posts&#x27;</span>, &#123;</span><br><span class="line">      <span class="attr">method</span>: <span class="string">&#x27;POST&#x27;</span>,</span><br><span class="line">      <span class="attr">body</span>: <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(&#123;</span><br><span class="line">        title,</span><br><span class="line">        body,</span><br><span class="line">        <span class="attr">userId</span>: <span class="number">1</span>,</span><br><span class="line">      &#125;),</span><br><span class="line">      <span class="attr">headers</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;Content-type&#x27;</span>: <span class="string">&#x27;application/json; charset=UTF-8&#x27;</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> post = <span class="keyword">await</span> res.<span class="title function_">json</span>();</span><br><span class="line">    post.<span class="property">show</span> = <span class="literal">true</span>;</span><br><span class="line">    post.<span class="property">id</span> = <span class="title class_">Math</span>.<span class="title function_">floor</span>(<span class="title class_">Math</span>.<span class="title function_">random</span>() * <span class="number">10000</span>);</span><br><span class="line">    <span class="title function_">commit</span>(<span class="string">&#x27;pushPost&#x27;</span>, post);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>這裡的動作就是將新增加的這筆資料加到 posts 裡。這裡的 <code>post</code> 存在 <code>state</code> 裡，所以要使用 <code>state.posts</code> 才能讀取。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//index.js</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> mutations = &#123;</span><br><span class="line">  <span class="comment">//rest of the code</span></span><br><span class="line"></span><br><span class="line">  <span class="title function_">pushPost</span>(<span class="params">state, post</span>) &#123;</span><br><span class="line">    state.<span class="property">posts</span>.<span class="title function_">unshift</span>(post);</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="comment">//rest of the code</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Update-更新"><a href="#Update-更新" class="headerlink" title="Update 更新"></a>Update 更新</h3><p>更新資料一樣使用 JSONplaceholder 提供的 API. 更新資料的邏輯是設定兩個區塊( 一般顯示&#x2F; 顯示 form 欄位 )，使用 <code>show</code> 當做變數來操控：當 <code>show</code> 為 true 時，就顯示正常的狀況、反之則顯示 form 讓用戶更新資料。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//index.vue</span></span><br><span class="line"></span><br><span class="line"><span class="attr">methods</span>: &#123;</span><br><span class="line">  <span class="keyword">async</span> updatePost (post, editedTitle, editedBody) &#123;</span><br><span class="line">    <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="property">$store</span>.<span class="title function_">dispatch</span>(<span class="string">&#x27;updatePost&#x27;</span>, &#123;</span><br><span class="line">      post,</span><br><span class="line">      <span class="attr">editedTitle</span>: <span class="variable language_">this</span>.<span class="property">editedTitle</span>,</span><br><span class="line">      <span class="attr">editedBody</span>: <span class="variable language_">this</span>.<span class="property">editedBody</span></span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  editBtn (post) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">$store</span>.<span class="title function_">dispatch</span>(<span class="string">&#x27;editBtn&#x27;</span>, post)</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">editedTitle</span> = post.<span class="property">title</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">editedBody</span> = post.<span class="property">body</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因為這裡不會改變原本的資料，因此這裡的 URL 後面的 id 可以不用改。再者，因為在創造新資料的時候，創造新的 id 是使用亂數產生，這些亂數並不存在在原本的資料中，因此用新 id 去發送請求會出現 error.</p>
+<p>在 form 出現的時候，<code>submit</code> 和 <code>cancel</code> button 會一同出現，<code>edit</code> 和 <code>delete</code> 就會隱藏起來。（會在 template 裡處理）.</p>
+<p><code>edit</code> button 和 <code>cancel</code> button 都是使用 for loop 的方式去找導被點擊的卡片。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//index.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> actions = &#123;</span><br><span class="line">  <span class="keyword">async</span> <span class="title function_">updatePost</span>(<span class="params">&#123; commit &#125;, &#123; post, editedTitle, editedBody &#125;</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="title function_">fetch</span>(<span class="string">&#x27;https://jsonplaceholder.typicode.com/posts/1&#x27;</span>, &#123;</span><br><span class="line">      <span class="attr">method</span>: <span class="string">&#x27;PUT&#x27;</span>,</span><br><span class="line">      <span class="attr">body</span>: <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(&#123;</span><br><span class="line">        <span class="attr">id</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="attr">title</span>: post.<span class="property">title</span>,</span><br><span class="line">        <span class="attr">body</span>: post.<span class="property">body</span>,</span><br><span class="line">        <span class="attr">userId</span>: <span class="number">1</span>,</span><br><span class="line">      &#125;),</span><br><span class="line">      <span class="attr">headers</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;Content-type&#x27;</span>: <span class="string">&#x27;application/json; charset=UTF-8&#x27;</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">await</span> res.<span class="title function_">json</span>();</span><br><span class="line">    <span class="title function_">commit</span>(<span class="string">&#x27;setPost&#x27;</span>, &#123;</span><br><span class="line">      <span class="attr">id</span>: post.<span class="property">id</span>,</span><br><span class="line">      <span class="attr">title</span>: editedTitle,</span><br><span class="line">      <span class="attr">body</span>: editedBody,</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="title function_">commit</span>(<span class="string">&#x27;setShow&#x27;</span>, &#123;</span><br><span class="line">      <span class="attr">id</span>: post.<span class="property">id</span>,</span><br><span class="line">      <span class="attr">show</span>: <span class="literal">true</span>,</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="title function_">editBtn</span>(<span class="params">&#123; commit, state &#125;, post</span>) &#123;</span><br><span class="line">    state.<span class="property">posts</span>.<span class="title function_">forEach</span>(<span class="function">(<span class="params">item</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (item.<span class="property">id</span> !== post.<span class="property">id</span>) &#123;</span><br><span class="line">        <span class="title function_">commit</span>(<span class="string">&#x27;setShow&#x27;</span>, &#123;</span><br><span class="line">          <span class="attr">id</span>: item.<span class="property">id</span>,</span><br><span class="line">          <span class="attr">show</span>: <span class="literal">true</span>,</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="title function_">commit</span>(<span class="string">&#x27;setShow&#x27;</span>, &#123;</span><br><span class="line">      <span class="attr">id</span>: post.<span class="property">id</span>,</span><br><span class="line">      <span class="attr">show</span>: !post.<span class="property">show</span>,</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="title function_">cancelBtn</span>(<span class="params">&#123; commit, state &#125;, post</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> postIndex = state.<span class="property">posts</span>.<span class="title function_">findIndex</span>(<span class="function">(<span class="params">item</span>) =&gt;</span> item.<span class="property">id</span> === post.<span class="property">id</span>);</span><br><span class="line"></span><br><span class="line">    state.<span class="property">posts</span>.<span class="title function_">forEach</span>(<span class="function">(<span class="params">item</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (item.<span class="property">id</span> === postIndex) &#123;</span><br><span class="line">        <span class="title function_">commit</span>(<span class="string">&#x27;setShow&#x27;</span>, &#123;</span><br><span class="line">          <span class="attr">id</span>: item.<span class="property">id</span>,</span><br><span class="line">          <span class="attr">show</span>: <span class="literal">true</span>,</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="title function_">commit</span>(<span class="string">&#x27;setShow&#x27;</span>, &#123;</span><br><span class="line">      <span class="attr">id</span>: post.<span class="property">id</span>,</span><br><span class="line">      <span class="attr">show</span>: <span class="literal">true</span>,</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//index.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> mutations = &#123;</span><br><span class="line">  <span class="title function_">setPost</span>(<span class="params">state, &#123; id, title, body &#125;</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> postIndex = state.<span class="property">posts</span>.<span class="title function_">findIndex</span>(<span class="function">(<span class="params">item</span>) =&gt;</span> item.<span class="property">id</span> === id);</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">_vm</span>.$set(state.<span class="property">posts</span>, postIndex, &#123;</span><br><span class="line">      title,</span><br><span class="line">      body,</span><br><span class="line">      id,</span><br><span class="line">      <span class="attr">show</span>: <span class="literal">true</span>,</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="title function_">setShow</span>(<span class="params">state, &#123; id, show &#125;</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> postIndex = state.<span class="property">posts</span>.<span class="title function_">findIndex</span>(<span class="function">(<span class="params">item</span>) =&gt;</span> item.<span class="property">id</span> === id);</span><br><span class="line">    state.<span class="property">posts</span>[postIndex].<span class="property">show</span> = show;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Delete-刪除"><a href="#Delete-刪除" class="headerlink" title="Delete 刪除"></a>Delete 刪除</h3><p>如前面所說的，發出去的 request 並不會真的改變原本的資料。因此這裡刪除的處理方式就是將被點到 comment 從 posts array 中移除。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.vue</span></span><br><span class="line"><span class="attr">methods</span>: &#123;</span><br><span class="line">  deletePost (post) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">$store</span>.<span class="title function_">dispatch</span>(<span class="string">&#x27;deletePost&#x27;</span>, post)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//index.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> actions = &#123;</span><br><span class="line">  <span class="title function_">deletePost</span>(<span class="params">&#123; commit &#125;, post</span>) &#123;</span><br><span class="line">    <span class="title function_">fetch</span>(<span class="string">`https://jsonplaceholder.typicode.com/posts/<span class="subst">$&#123;post.id&#125;</span>`</span>, &#123;</span><br><span class="line">      <span class="attr">method</span>: <span class="string">&#x27;DELETE&#x27;</span>,</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="title function_">commit</span>(<span class="string">&#x27;removePost&#x27;</span>, post.<span class="property">id</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//index.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> mutations = &#123;</span><br><span class="line">  <span class="title function_">removePost</span>(<span class="params">state, id</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> removeItem = state.<span class="property">posts</span>.<span class="title function_">findIndex</span>(<span class="function">(<span class="params">item</span>) =&gt;</span> item.<span class="property">id</span> === id);</span><br><span class="line">    state.<span class="property">posts</span>.<span class="title function_">splice</span>(removeItem, <span class="number">1</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="其他小筆記"><a href="#其他小筆記" class="headerlink" title="其他小筆記"></a>其他小筆記</h2><h3 id="全局引入-CSS"><a href="#全局引入-CSS" class="headerlink" title="全局引入 CSS"></a>全局引入 CSS</h3><p>這個例子其實沒有用到很多的樣式，但還是有一個 CSS 檔案需要引入。這裡選擇了最方便的方式：在 <code>nuxt.config.js</code> 中全局引入。</p>
+<p>因為還沒有深入研究全局引入和其他方式引入有什麼優劣，因此這裡就是用我認為最方便的方法。</p>
+<p><a target="_blank" rel="noopener" href="https://i.imgur.com/xtfsD3p.png"><img src="https://i.imgur.com/xtfsD3p.png"></a></p>
+<h3 id="methods-裡的-function"><a href="#methods-裡的-function" class="headerlink" title="methods 裡的 function"></a>methods 裡的 function</h3><p>methods 是一個 dictionary, 內容看起來不是常見的 key: value pair, 他其實是簡寫。原本長得是這個樣子，但如果後面接的是匿名函式就可以簡寫成 <code>createPost() &#123;...&#125;</code> .</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//原本長這樣</span></span><br><span class="line"><span class="attr">methods</span>: &#123;</span><br><span class="line">  <span class="attr">createPost</span>: <span class="function">() =&gt;</span> &#123;&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="部署到-github-page"><a href="#部署到-github-page" class="headerlink" title="部署到 github page"></a>部署到 github page</h3><p>這裡參考了這篇文章：<a target="_blank" rel="noopener" href="https://ithelp.ithome.com.tw/articles/10209553">28. Nuxt 靜態頁部署</a> ，就沒有在另外寫筆記啦。</p>
+<h2 id="小結"><a href="#小結" class="headerlink" title="小結"></a>小結</h2><p>這次機緣巧合下需要接觸 Vue 和 Nuxt 所做出來的小栗子。當中有遇到一些參數傳遞的問題，以及一些元件沒有及時更新的問題，後者的問題在使用 Vuex 之後就解決了。其他遇到的坑或是需要留意的部分都記錄下來了。</p>
+<p>心得就是不會就要問，卡太久就要問，問了就會記下來這樣。因為這是第一次接觸 Nuxt, 以前也沒有寫過 Vue, 弄起來還是有些吃力，背後的原理還是概念會再慢慢補起來，這裡就當做一個簡單記錄。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/blog/">首頁</a></li>
+        
+          <li><a href="/blog/about/">關於</a></li>
+        
+          <li><a href="/blog/archives/">文章</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/winnie0609">專案</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E7%AF%87%E5%A4%A7%E7%B6%B1"><span class="toc-number">1.</span> <span class="toc-text">本篇大綱</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B0%A1%E4%BB%8B"><span class="toc-number">2.</span> <span class="toc-text">簡介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E4%BD%9C%E6%A5%AD"><span class="toc-number">3.</span> <span class="toc-text">前置作業</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E5%A2%9E-Nuxt-%E5%B0%88%E6%A1%88"><span class="toc-number">3.1.</span> <span class="toc-text">新增 Nuxt 專案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BA%96%E5%82%99%E8%B3%87%E6%96%99"><span class="toc-number">3.2.</span> <span class="toc-text">準備資料</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A8%AD%E5%AE%9A-UI"><span class="toc-number">3.3.</span> <span class="toc-text">設定 UI</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Vuex-%E8%A8%AD%E5%AE%9A"><span class="toc-number">4.</span> <span class="toc-text">Vuex 設定</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#State"><span class="toc-number">4.1.</span> <span class="toc-text">State</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Action"><span class="toc-number">4.2.</span> <span class="toc-text">Action</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mutation"><span class="toc-number">4.3.</span> <span class="toc-text">Mutation</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CRUD-%E5%8A%9F%E8%83%BD"><span class="toc-number">5.</span> <span class="toc-text">CRUD 功能</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Read-%E8%AE%80%E5%8F%96"><span class="toc-number">5.1.</span> <span class="toc-text">Read 讀取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-%E5%A2%9E%E5%8A%A0"><span class="toc-number">5.2.</span> <span class="toc-text">Create 增加</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Update-%E6%9B%B4%E6%96%B0"><span class="toc-number">5.3.</span> <span class="toc-text">Update 更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Delete-%E5%88%AA%E9%99%A4"><span class="toc-number">5.4.</span> <span class="toc-text">Delete 刪除</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E5%B0%8F%E7%AD%86%E8%A8%98"><span class="toc-number">6.</span> <span class="toc-text">其他小筆記</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%A8%E5%B1%80%E5%BC%95%E5%85%A5-CSS"><span class="toc-number">6.1.</span> <span class="toc-text">全局引入 CSS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#methods-%E8%A3%A1%E7%9A%84-function"><span class="toc-number">6.2.</span> <span class="toc-text">methods 裡的 function</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%E5%88%B0-github-page"><span class="toc-number">6.3.</span> <span class="toc-text">部署到 github page</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%B5%90"><span class="toc-number">7.</span> <span class="toc-text">小結</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://winnie0609.github.io/blog/2021-07-21/nuxt-crud/"
+      ><i class="fab fa-facebook fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://twitter.com/share?url=https://winnie0609.github.io/blog/2021-07-21/nuxt-crud/&text=Nuxt.js 搭配 Vuex 實作 CRUD"
+      ><i class="fab fa-twitter fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://winnie0609.github.io/blog/2021-07-21/nuxt-crud/&title=Nuxt.js 搭配 Vuex 實作 CRUD"
+      ><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://winnie0609.github.io/blog/2021-07-21/nuxt-crud/&is_video=false&description=Nuxt.js 搭配 Vuex 實作 CRUD"
+      ><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <li>
+    <a
+      class="icon"
+      href="mailto:?subject=Nuxt.js 搭配 Vuex 實作 CRUD&body=Check out this article: https://winnie0609.github.io/blog/2021-07-21/nuxt-crud/"
+      ><i
+        class="fa-solid fa-envelope fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://winnie0609.github.io/blog/2021-07-21/nuxt-crud/&title=Nuxt.js 搭配 Vuex 實作 CRUD"
+      ><i
+        class="fab fa-get-pocket fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://winnie0609.github.io/blog/2021-07-21/nuxt-crud/&title=Nuxt.js 搭配 Vuex 實作 CRUD"
+      ><i class="fab fa-reddit fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://winnie0609.github.io/blog/2021-07-21/nuxt-crud/&title=Nuxt.js 搭配 Vuex 實作 CRUD"
+      ><i
+        class="fab fa-stumbleupon fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://digg.com/submit?url=https://winnie0609.github.io/blog/2021-07-21/nuxt-crud/&title=Nuxt.js 搭配 Vuex 實作 CRUD"
+      ><i class="fab fa-digg fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://winnie0609.github.io/blog/2021-07-21/nuxt-crud/&name=Nuxt.js 搭配 Vuex 實作 CRUD&description="
+      ><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://winnie0609.github.io/blog/2021-07-21/nuxt-crud/&t=Nuxt.js 搭配 Vuex 實作 CRUD"
+      ><i
+        class="fab fa-hacker-news fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 選單</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 文章目錄</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 頁首</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    &copy;
+    
+    
+    2023
+    Winnie 
+    | Powered by <a href="hexo.io/">Hexo</a> & <a target="_blank" rel="noopener" href="https://github.com/probberechts/hexo-theme-cactus">Cactus</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/blog/">首頁</a></li><!--
+     --><!--
+       --><li><a href="/blog/about/">關於</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">文章</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/winnie0609">專案</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"複製\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "已複製！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
