@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="這是使用純 JS 寫的小小擲骰子遊戲，主要用來練習使用 JS 操控 DOM.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【實作記錄】The Dice Game">
+<meta property="og:url" content="https://winnie0609.github.io/blog/2021/03/12/dice-game/index.html">
+<meta property="og:site_name" content="Winnie&#39;s blog">
+<meta property="og:description" content="這是使用純 JS 寫的小小擲骰子遊戲，主要用來練習使用 JS 操控 DOM.">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://i.imgur.com/0HcsX0Q.gif">
+<meta property="article:published_time" content="2021-03-12T07:28:45.000Z">
+<meta property="article:modified_time" content="2023-07-30T08:43:47.887Z">
+<meta property="article:author" content="Winnie">
+<meta property="article:tag" content="實作紀錄">
+<meta property="article:tag" content="js">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/0HcsX0Q.gif">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/blog/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【實作記錄】The Dice Game</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"
+    ><i class="fa-solid fa-bars fa-lg"></i
+  ></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"
+    ><i class="fa-solid fa-bars fa-lg"></i
+  ></a>
+  <a
+    id="top-icon-tablet"
+    href="#"
+    aria-label="Top"
+    onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"
+    style="display: none"
+    ><i class="fa-solid fa-chevron-up fa-lg"></i
+  ></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       -->
+        <li>
+          <a href="/blog/"
+            >首頁</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a href="/blog/about/"
+            >關於</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a href="/blog/archives/"
+            >文章</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a target="_blank" rel="noopener" href="http://github.com/winnie0609"
+            >專案</a
+          >
+        </li>
+        <!--
+     -->
+      </ul>
+    </span>
+    <br />
+    <span id="actions">
+      <ul>
+        
+        <li>
+          <a
+            class="icon"
+            aria-label="上一篇"
+            href="/blog/2021/03/15/snake-game/"
+            ><i
+              class="fa-solid fa-chevron-left"
+              aria-hidden="true"
+              onmouseover="$('#i-prev').toggle();"
+              onmouseout="$('#i-prev').toggle();"
+            ></i
+          ></a>
+        </li>
+         
+        <li>
+          <a
+            class="icon"
+            aria-label="下一篇"
+            href="/blog/2021/03/03/glassmorphism/"
+            ><i
+              class="fa-solid fa-chevron-right"
+              aria-hidden="true"
+              onmouseover="$('#i-next').toggle();"
+              onmouseout="$('#i-next').toggle();"
+            ></i
+          ></a>
+        </li>
+        
+        <li>
+          <a
+            class="icon"
+            aria-label="回到頁首"
+            href="#"
+            onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"
+            ><i
+              class="fa-solid fa-chevron-up"
+              aria-hidden="true"
+              onmouseover="$('#i-top').toggle();"
+              onmouseout="$('#i-top').toggle();"
+            ></i
+          ></a>
+        </li>
+        <li>
+          <a class="icon" aria-label="分享" href="#"
+            ><i
+              class="fa-solid fa-share-alt"
+              aria-hidden="true"
+              onmouseover="$('#i-share').toggle();"
+              onmouseout="$('#i-share').toggle();"
+              onclick="$('#share').toggle();return false;"
+            ></i
+          ></a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display: none"
+        >上一篇</span
+      >
+      <span id="i-next" class="info" style="display: none"
+        >下一篇</span
+      >
+      <span id="i-top" class="info" style="display: none"
+        >回到頁首</span
+      >
+      <span id="i-share" class="info" style="display: none"
+        >分享</span
+      >
+    </span>
+    <br />
+    <div id="share" style="display: none">
+      <ul>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://winnie0609.github.io/blog/2021/03/12/dice-game/"
+      ><i class="fab fa-facebook " aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://twitter.com/share?url=https://winnie0609.github.io/blog/2021/03/12/dice-game/&text=【實作記錄】The Dice Game"
+      ><i class="fab fa-twitter " aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://winnie0609.github.io/blog/2021/03/12/dice-game/&title=【實作記錄】The Dice Game"
+      ><i class="fab fa-linkedin " aria-hidden="true"></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://winnie0609.github.io/blog/2021/03/12/dice-game/&is_video=false&description=【實作記錄】The Dice Game"
+      ><i class="fab fa-pinterest " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <li>
+    <a
+      class="icon"
+      href="mailto:?subject=【實作記錄】The Dice Game&body=Check out this article: https://winnie0609.github.io/blog/2021/03/12/dice-game/"
+      ><i
+        class="fa-solid fa-envelope "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://winnie0609.github.io/blog/2021/03/12/dice-game/&title=【實作記錄】The Dice Game"
+      ><i
+        class="fab fa-get-pocket "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://winnie0609.github.io/blog/2021/03/12/dice-game/&title=【實作記錄】The Dice Game"
+      ><i class="fab fa-reddit " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://winnie0609.github.io/blog/2021/03/12/dice-game/&title=【實作記錄】The Dice Game"
+      ><i
+        class="fab fa-stumbleupon "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://digg.com/submit?url=https://winnie0609.github.io/blog/2021/03/12/dice-game/&title=【實作記錄】The Dice Game"
+      ><i class="fab fa-digg " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://winnie0609.github.io/blog/2021/03/12/dice-game/&name=【實作記錄】The Dice Game&description="
+      ><i class="fab fa-tumblr " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://winnie0609.github.io/blog/2021/03/12/dice-game/&t=【實作記錄】The Dice Game"
+      ><i
+        class="fab fa-hacker-news "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+</ul>
+
+    </div>
+     
+    <div id="toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B0%A1%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">簡介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">2.</span> <span class="toc-text">功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%AD%86%E8%A8%98"><span class="toc-number">3.</span> <span class="toc-text">小筆記</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B0%8F%E7%B5%90"><span class="toc-number"></span> <span class="toc-text">小結</span></a></div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        【實作記錄】The Dice Game
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Winnie</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-03-12T07:28:45.000Z" class="dt-published" itemprop="datePublished">2021-03-12</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/blog/tags/js/" rel="tag">js</a>, <a class="p-category" href="/blog/tags/%E5%AF%A6%E4%BD%9C%E7%B4%80%E9%8C%84/" rel="tag">實作紀錄</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p><a href="https://winnie0609.github.io/dice-game/dice.html">live Demo</a><br><a target="_blank" rel="noopener" href="https://github.com/Winnie0609/dice-game">Github</a></p>
+<p><a target="_blank" rel="noopener" href="https://i.imgur.com/0HcsX0Q.gif"><img src="https://i.imgur.com/0HcsX0Q.gif" alt="Login Page Demo"></a></p>
+<h2 id="簡介"><a href="#簡介" class="headerlink" title="簡介"></a>簡介</h2><p>這是使用純 JS 寫的小小擲骰子遊戲，主要用來練習使用 JS 操控 DOM.</p>
+<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><ul>
+<li>點擊按鈕擲骰子，點數直接加到分數板，贏家為先獲得 20 分的隊伍</li>
+<li>兩隊玩家各有兩個角色可以選擇</li>
+<li>玩家可以輸入名字</li>
+<li>輪到藍隊玩家時，其角色會出現藍色框框；粉隊玩家則為粉色框框</li>
+<li>點數更換成骰子的 icon</li>
+</ul>
+<h2 id="小筆記"><a href="#小筆記" class="headerlink" title="小筆記"></a>小筆記</h2><ul>
+<li>圖片重疊: 使用 position:absolute 進行定位</li>
+<li>inner.HTML: 可以直接加入 html tag</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">characterPlayer1_first.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;.border1&#x27;</span>).<span class="property">innerHTML</span> =</span><br><span class="line">    <span class="string">&#x27;&lt;img class=&quot;img1&quot; src=&quot;./img/robot-1.png&quot; alt=&quot;player one&quot;&gt;&#x27;</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h1 id="小結"><a href="#小結" class="headerlink" title="小結"></a>小結</h1><p>這不是一個複雜的遊戲，基本擲骰子積計分的功能蠻快就做出來了。反而花最多時間的地方在玩家回合的粉色和藍色框框，原本框框設置成照片的 border, 但在換角色時候，框框就無法顯示。最後才想到把框框獨立出來就好了(༎ຶ⌑༎ຶ) 其他部分則沒有遇到太大的問題。之後有機會要再改良的話，應該會從兩隊勝率不均這個部分下手。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/blog/">首頁</a></li>
+        
+          <li><a href="/blog/about/">關於</a></li>
+        
+          <li><a href="/blog/archives/">文章</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/winnie0609">專案</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B0%A1%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">簡介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">2.</span> <span class="toc-text">功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%AD%86%E8%A8%98"><span class="toc-number">3.</span> <span class="toc-text">小筆記</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B0%8F%E7%B5%90"><span class="toc-number"></span> <span class="toc-text">小結</span></a>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://winnie0609.github.io/blog/2021/03/12/dice-game/"
+      ><i class="fab fa-facebook fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://twitter.com/share?url=https://winnie0609.github.io/blog/2021/03/12/dice-game/&text=【實作記錄】The Dice Game"
+      ><i class="fab fa-twitter fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://winnie0609.github.io/blog/2021/03/12/dice-game/&title=【實作記錄】The Dice Game"
+      ><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://winnie0609.github.io/blog/2021/03/12/dice-game/&is_video=false&description=【實作記錄】The Dice Game"
+      ><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <li>
+    <a
+      class="icon"
+      href="mailto:?subject=【實作記錄】The Dice Game&body=Check out this article: https://winnie0609.github.io/blog/2021/03/12/dice-game/"
+      ><i
+        class="fa-solid fa-envelope fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://winnie0609.github.io/blog/2021/03/12/dice-game/&title=【實作記錄】The Dice Game"
+      ><i
+        class="fab fa-get-pocket fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://winnie0609.github.io/blog/2021/03/12/dice-game/&title=【實作記錄】The Dice Game"
+      ><i class="fab fa-reddit fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://winnie0609.github.io/blog/2021/03/12/dice-game/&title=【實作記錄】The Dice Game"
+      ><i
+        class="fab fa-stumbleupon fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://digg.com/submit?url=https://winnie0609.github.io/blog/2021/03/12/dice-game/&title=【實作記錄】The Dice Game"
+      ><i class="fab fa-digg fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://winnie0609.github.io/blog/2021/03/12/dice-game/&name=【實作記錄】The Dice Game&description="
+      ><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://winnie0609.github.io/blog/2021/03/12/dice-game/&t=【實作記錄】The Dice Game"
+      ><i
+        class="fab fa-hacker-news fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 選單</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 文章目錄</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 頁首</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    &copy;
+    
+    
+    2023
+    Winnie 
+    | Powered by <a href="hexo.io/">Hexo</a> & <a target="_blank" rel="noopener" href="https://github.com/probberechts/hexo-theme-cactus">Cactus</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/blog/">首頁</a></li><!--
+     --><!--
+       --><li><a href="/blog/about/">關於</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">文章</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/winnie0609">專案</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"複製\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "已複製！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="JavaScript 的物件通過原型 (Prototype) 機制來達到相互繼承功能。當使用 Constructor Function 創造 object 時，所創造出來的物件不共享 constructor 的屬性和方法。所創造出來的物件稱為實例 ( instance ).">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript 的原型鏈">
+<meta property="og:url" content="https://winnie0609.github.io/blog/2021/06/20/js-prototype-chain/index.html">
+<meta property="og:site_name" content="Winnie&#39;s blog">
+<meta property="og:description" content="JavaScript 的物件通過原型 (Prototype) 機制來達到相互繼承功能。當使用 Constructor Function 創造 object 時，所創造出來的物件不共享 constructor 的屬性和方法。所創造出來的物件稱為實例 ( instance ).">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://i.imgur.com/9RlOSt6.jpg">
+<meta property="article:published_time" content="2021-06-20T15:54:46.000Z">
+<meta property="article:modified_time" content="2023-07-25T01:58:53.403Z">
+<meta property="article:author" content="Winnie">
+<meta property="article:tag" content="js">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/9RlOSt6.jpg">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/blog/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>JavaScript 的原型鏈</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"
+    ><i class="fa-solid fa-bars fa-lg"></i
+  ></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"
+    ><i class="fa-solid fa-bars fa-lg"></i
+  ></a>
+  <a
+    id="top-icon-tablet"
+    href="#"
+    aria-label="Top"
+    onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"
+    style="display: none"
+    ><i class="fa-solid fa-chevron-up fa-lg"></i
+  ></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       -->
+        <li>
+          <a href="/blog/"
+            >首頁</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a href="/blog/about/"
+            >關於</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a href="/blog/archives/"
+            >文章</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a target="_blank" rel="noopener" href="http://github.com/winnie0609"
+            >專案</a
+          >
+        </li>
+        <!--
+     -->
+      </ul>
+    </span>
+    <br />
+    <span id="actions">
+      <ul>
+        
+        <li>
+          <a
+            class="icon"
+            aria-label="上一篇"
+            href="/blog/2021/07/21/nuxt-crud/"
+            ><i
+              class="fa-solid fa-chevron-left"
+              aria-hidden="true"
+              onmouseover="$('#i-prev').toggle();"
+              onmouseout="$('#i-prev').toggle();"
+            ></i
+          ></a>
+        </li>
+         
+        <li>
+          <a
+            class="icon"
+            aria-label="下一篇"
+            href="/blog/2021/06/20/js-this/"
+            ><i
+              class="fa-solid fa-chevron-right"
+              aria-hidden="true"
+              onmouseover="$('#i-next').toggle();"
+              onmouseout="$('#i-next').toggle();"
+            ></i
+          ></a>
+        </li>
+        
+        <li>
+          <a
+            class="icon"
+            aria-label="回到頁首"
+            href="#"
+            onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"
+            ><i
+              class="fa-solid fa-chevron-up"
+              aria-hidden="true"
+              onmouseover="$('#i-top').toggle();"
+              onmouseout="$('#i-top').toggle();"
+            ></i
+          ></a>
+        </li>
+        <li>
+          <a class="icon" aria-label="分享" href="#"
+            ><i
+              class="fa-solid fa-share-alt"
+              aria-hidden="true"
+              onmouseover="$('#i-share').toggle();"
+              onmouseout="$('#i-share').toggle();"
+              onclick="$('#share').toggle();return false;"
+            ></i
+          ></a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display: none"
+        >上一篇</span
+      >
+      <span id="i-next" class="info" style="display: none"
+        >下一篇</span
+      >
+      <span id="i-top" class="info" style="display: none"
+        >回到頁首</span
+      >
+      <span id="i-share" class="info" style="display: none"
+        >分享</span
+      >
+    </span>
+    <br />
+    <div id="share" style="display: none">
+      <ul>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://winnie0609.github.io/blog/2021/06/20/js-prototype-chain/"
+      ><i class="fab fa-facebook " aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://twitter.com/share?url=https://winnie0609.github.io/blog/2021/06/20/js-prototype-chain/&text=JavaScript 的原型鏈"
+      ><i class="fab fa-twitter " aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://winnie0609.github.io/blog/2021/06/20/js-prototype-chain/&title=JavaScript 的原型鏈"
+      ><i class="fab fa-linkedin " aria-hidden="true"></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://winnie0609.github.io/blog/2021/06/20/js-prototype-chain/&is_video=false&description=JavaScript 的原型鏈"
+      ><i class="fab fa-pinterest " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <li>
+    <a
+      class="icon"
+      href="mailto:?subject=JavaScript 的原型鏈&body=Check out this article: https://winnie0609.github.io/blog/2021/06/20/js-prototype-chain/"
+      ><i
+        class="fa-solid fa-envelope "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://winnie0609.github.io/blog/2021/06/20/js-prototype-chain/&title=JavaScript 的原型鏈"
+      ><i
+        class="fab fa-get-pocket "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://winnie0609.github.io/blog/2021/06/20/js-prototype-chain/&title=JavaScript 的原型鏈"
+      ><i class="fab fa-reddit " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://winnie0609.github.io/blog/2021/06/20/js-prototype-chain/&title=JavaScript 的原型鏈"
+      ><i
+        class="fab fa-stumbleupon "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://digg.com/submit?url=https://winnie0609.github.io/blog/2021/06/20/js-prototype-chain/&title=JavaScript 的原型鏈"
+      ><i class="fab fa-digg " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://winnie0609.github.io/blog/2021/06/20/js-prototype-chain/&name=JavaScript 的原型鏈&description="
+      ><i class="fab fa-tumblr " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://winnie0609.github.io/blog/2021/06/20/js-prototype-chain/&t=JavaScript 的原型鏈"
+      ><i
+        class="fab fa-hacker-news "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+</ul>
+
+    </div>
+     
+    <div id="toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E7%AF%87%E5%A4%A7%E7%B6%B1"><span class="toc-number">1.</span> <span class="toc-text">本篇大綱</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B-Prototype"><span class="toc-number">2.</span> <span class="toc-text">原型 Prototype</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%9C%E6%96%BC%E5%8E%9F%E5%9E%8B%E9%8F%88"><span class="toc-number">3.</span> <span class="toc-text">關於原型鏈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">4.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AA%A2%E6%9F%A5%E5%B1%AC%E6%80%A7"><span class="toc-number">4.1.</span> <span class="toc-text">檢查屬性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AA%A2%E6%9F%A5%E5%AF%A6%E4%BE%8B"><span class="toc-number">4.2.</span> <span class="toc-text">檢查實例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%83%E8%80%83%E8%B3%87%E6%96%99"><span class="toc-number">5.</span> <span class="toc-text">參考資料</span></a></li></ol></div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        JavaScript 的原型鏈
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Winnie</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-06-20T15:54:46.000Z" class="dt-published" itemprop="datePublished">2021-06-20</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/blog/tags/js/" rel="tag">js</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="本篇大綱"><a href="#本篇大綱" class="headerlink" title="本篇大綱"></a>本篇大綱</h2><ol>
+<li>原型是什麼</li>
+<li>原型鏈是什麼</li>
+<li>檢查屬性以及實例的方法</li>
+</ol>
+<p>JavaScript 的物件通過原型 (Prototype) 機制來達到相互繼承功能。當使用 Constructor Function 創造 object 時，所創造出來的物件不共享 constructor 的屬性和方法。所創造出來的物件稱為實例 ( instance ).</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// prototype 例子</span></span><br><span class="line"><span class="comment">// 不共享屬性</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params">first, last, gender</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">first</span> = first;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">last</span> = last;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">gender</span> = <span class="string">&#x27;male&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> person_one = <span class="keyword">new</span> <span class="title class_">Person</span>();</span><br><span class="line"><span class="keyword">var</span> person_two = <span class="keyword">new</span> <span class="title class_">Person</span>();</span><br><span class="line"></span><br><span class="line">person_two.<span class="property">gender</span> = <span class="string">&#x27;female&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person_one.<span class="property">gender</span>); <span class="comment">//male</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person_two.<span class="property">gender</span>); <span class="comment">//female</span></span><br></pre></td></tr></table></figure>
+
+<p>person_one 和 person_two 的 gender 屬性是獨立的，因此在修改 person_two 的 gender 時，不會影響到 person_one，兩個函式之間不共享屬性。</p>
+<h2 id="原型-Prototype"><a href="#原型-Prototype" class="headerlink" title="原型 Prototype"></a>原型 Prototype</h2><p>如果要讓所有實例都共享同一個屬性，可以運用實例的特性：當函式以構建函式的形式創建的時候，所創建的物件都有一個隱含的屬性( __proto__ )，指向該構建函式的原型物件。</p>
+<p>因此如果將屬性設置到 prototype，所有函式都能夠存取到該屬性。設置的方式為：<code>FunctionName.prototype.variable</code> .</p>
+<p><a target="_blank" rel="noopener" href="https://i.imgur.com/9RlOSt6.jpg"><img src="https://i.imgur.com/9RlOSt6.jpg"></a></p>
+<p>Person 這個函式物件以及他的實例的 __proto__ 指向的是同一個 prototype。這裡將 gender 這個屬性設置到 prototype，因此所有實例都可以取得這個屬性。</p>
+<p>person_one 這個實例另外設置了 gender 屬性。當呼叫物件的屬性時，首先會查找自身物件是否有該屬性，有的話就會回傳本身的，沒有的話則會往上一層 prototype 找，直到找到該屬性為止，如果到頂層都沒有找到就會回傳 undefined。因此，<code>person_one.gender</code> 會回傳 <code>female</code> , 而 <code>person_two.gender</code> 回傳 <code>male</code> .</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// prototype 例子</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params"></span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//向 Person 的 prototype 中添加屬性 gender</span></span><br><span class="line"><span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">gender</span> = <span class="string">&#x27;male&#x27;</span>;</span><br><span class="line"><span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">sayHello</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&#x27;Hellooo&#x27;</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> person_one = <span class="keyword">new</span> <span class="title class_">Person</span>();</span><br><span class="line"><span class="keyword">var</span> person_two = <span class="keyword">new</span> <span class="title class_">Person</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">//設置 person_one 的 gender</span></span><br><span class="line">person_one.<span class="property">gender</span> = <span class="string">&#x27;female&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person_one.<span class="property">gender</span>); <span class="comment">//會先找自身有沒有該屬性，有的話會直接使用; person_中有 gender 屬性，所以會使用自身的 gender</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person_two.<span class="property">gender</span>); <span class="comment">//因為 person_ two 中沒有屬性 gender, 所以會去原型物件中找</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person_one.<span class="title function_">sayHello</span>()); <span class="comment">//可以呼叫 prototype 裡的 function</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person_one.<span class="property">age</span>) &gt; <span class="comment">//這個屬性不存在</span></span><br><span class="line">  female &gt;</span><br><span class="line">  male &gt;</span><br><span class="line">  <span class="title class_">Hellooo</span> &gt;</span><br><span class="line">  <span class="literal">undefined</span>;</span><br></pre></td></tr></table></figure>
+
+<p>小結：</p>
+<ul>
+<li>原型物件就像是一個公共區域，同一個構造函式的實例都可以取得這個原型物件。</li>
+<li>當呼叫物件的屬性時，如果物件有該屬性，就會使用自身的；沒有的話就會往 prototype 找。</li>
+<li>prototype 裡也可以設置 function</li>
+<li>如果普通函式呼叫 prototype method，並不會起任何作用。</li>
+</ul>
+<h2 id="關於原型鏈"><a href="#關於原型鏈" class="headerlink" title="關於原型鏈"></a>關於原型鏈</h2><p>實例的 __proto__ 會指向 constructor 的 prototype。 如果呼叫某個物件的屬性，如 <code>person_two.gender</code>, 如果在自身 object 裡找不到，就會往上一層 <code>Person.prototype</code> 找，如果還是沒有，就找 <code>Person.prototype.__ proto __</code> ，直到找到某個東西的 __proto__ 是 null 為止。</p>
+<p>眾多 __ptoto__ 串起來的鏈就稱為原型鏈。通過原型鏈，可以達成類似繼承的功能，得以呼叫自己 parent 的 method.</p>
+<p>PS: <code>Person.__ proto __</code> 是 <code>Function.prototype</code> , Person 是 Function 的 instance.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params">first, last</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">first</span> = first;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">last</span> = last;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">gender</span> = <span class="string">&#x27;male&#x27;</span>;</span><br><span class="line"><span class="keyword">var</span> person_one = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&#x27;Sky&#x27;</span>, <span class="string">&#x27;Walker&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//person_one.__proto__ 指向 Person.prototype</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person_one.<span class="property">__proto__</span> === <span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>);</span><br><span class="line"><span class="comment">//Person.prototype.__proto__ 指向 object.prototype</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">__proto__</span> === <span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>);</span><br><span class="line"><span class="comment">//object.prototype 是 null 為原型鏈的頂端</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">__proto__</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="檢查屬性"><a href="#檢查屬性" class="headerlink" title="檢查屬性"></a>檢查屬性</h3><ul>
+<li><code>in</code>: 使用 <code>in</code> 檢查物件中是否含有某個屬性，如果物件中沒有，但 prototype 有會返回<code>true</code></li>
+<li><code>object.hasOwnProperty()</code>: 檢查物件自身有沒有這個屬性</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//檢查屬性</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params">first,last</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">first</span> = first</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">last</span> = last</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">gender</span> = <span class="string">&quot;male&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> person\_one = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&quot;Sky&quot;</span>,<span class="string">&quot;Walker&quot;</span>)</span><br><span class="line">person\_one.<span class="property">age</span> = <span class="number">42</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;gender&quot;</span> <span class="keyword">in</span> person\_one) <span class="comment">//true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;age&quot;</span> <span class="keyword">in</span> person\_one) <span class="comment">//true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person\_one.<span class="title function_">hasOwnProperty</span>(<span class="string">&quot;gender&quot;</span>)) <span class="comment">//false</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person\_one.<span class="title function_">hasOwnProperty</span>(<span class="string">&quot;last&quot;</span>)) <span class="comment">//true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person\_one.<span class="title function_">hasOwnProperty</span>(<span class="string">&quot;age&quot;</span>)) <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="檢查實例"><a href="#檢查實例" class="headerlink" title="檢查實例"></a>檢查實例</h3><ul>
+<li><code>instanceOf</code>: 檢查函式是不是某個 constructor 的 instance , 會往上搜查原型鏈。</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//檢查實例</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params">first,last</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">first</span> = first</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">last</span> = last</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> person\_one = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&quot;Sky&quot;</span>,<span class="string">&quot;Walker&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person\_one <span class="keyword">instanceof</span> <span class="title class_">Person</span>) <span class="comment">//true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person\_one <span class="keyword">instanceof</span> <span class="title class_">Object</span>) <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="參考資料"><a href="#參考資料" class="headerlink" title="參考資料"></a>參考資料</h2><ol>
+<li><a href="%5Bhttps://%5D(https://github.com/aszx87410/blog/issues/18)">該來理解 JavaScript 的原型鍊了</a></li>
+<li><a href="%5Bhttps://%5D(https://medium.com/%E7%8B%97%E5%A5%B4%E5%B7%A5%E7%A8%8B%E5%B8%AB/%E4%BD%A0%E4%B8%8D%E5%8F%AF%E4%B8%8D%E7%9F%A5%E7%9A%84%E5%8E%9F%E5%9E%8B%E9%8F%88-prototype-b2473b301a11)">你不可不知的原型鏈 Prototype | JavaScript 鍛鍊日記</a></li>
+</ol>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/blog/">首頁</a></li>
+        
+          <li><a href="/blog/about/">關於</a></li>
+        
+          <li><a href="/blog/archives/">文章</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/winnie0609">專案</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E7%AF%87%E5%A4%A7%E7%B6%B1"><span class="toc-number">1.</span> <span class="toc-text">本篇大綱</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B-Prototype"><span class="toc-number">2.</span> <span class="toc-text">原型 Prototype</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%9C%E6%96%BC%E5%8E%9F%E5%9E%8B%E9%8F%88"><span class="toc-number">3.</span> <span class="toc-text">關於原型鏈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">4.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AA%A2%E6%9F%A5%E5%B1%AC%E6%80%A7"><span class="toc-number">4.1.</span> <span class="toc-text">檢查屬性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AA%A2%E6%9F%A5%E5%AF%A6%E4%BE%8B"><span class="toc-number">4.2.</span> <span class="toc-text">檢查實例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%83%E8%80%83%E8%B3%87%E6%96%99"><span class="toc-number">5.</span> <span class="toc-text">參考資料</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://winnie0609.github.io/blog/2021/06/20/js-prototype-chain/"
+      ><i class="fab fa-facebook fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://twitter.com/share?url=https://winnie0609.github.io/blog/2021/06/20/js-prototype-chain/&text=JavaScript 的原型鏈"
+      ><i class="fab fa-twitter fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://winnie0609.github.io/blog/2021/06/20/js-prototype-chain/&title=JavaScript 的原型鏈"
+      ><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://winnie0609.github.io/blog/2021/06/20/js-prototype-chain/&is_video=false&description=JavaScript 的原型鏈"
+      ><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <li>
+    <a
+      class="icon"
+      href="mailto:?subject=JavaScript 的原型鏈&body=Check out this article: https://winnie0609.github.io/blog/2021/06/20/js-prototype-chain/"
+      ><i
+        class="fa-solid fa-envelope fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://winnie0609.github.io/blog/2021/06/20/js-prototype-chain/&title=JavaScript 的原型鏈"
+      ><i
+        class="fab fa-get-pocket fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://winnie0609.github.io/blog/2021/06/20/js-prototype-chain/&title=JavaScript 的原型鏈"
+      ><i class="fab fa-reddit fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://winnie0609.github.io/blog/2021/06/20/js-prototype-chain/&title=JavaScript 的原型鏈"
+      ><i
+        class="fab fa-stumbleupon fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://digg.com/submit?url=https://winnie0609.github.io/blog/2021/06/20/js-prototype-chain/&title=JavaScript 的原型鏈"
+      ><i class="fab fa-digg fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://winnie0609.github.io/blog/2021/06/20/js-prototype-chain/&name=JavaScript 的原型鏈&description="
+      ><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://winnie0609.github.io/blog/2021/06/20/js-prototype-chain/&t=JavaScript 的原型鏈"
+      ><i
+        class="fab fa-hacker-news fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 選單</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 文章目錄</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 頁首</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    &copy;
+    
+    
+    2023
+    Winnie 
+    | Powered by <a href="hexo.io/">Hexo</a> & <a target="_blank" rel="noopener" href="https://github.com/probberechts/hexo-theme-cactus">Cactus</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/blog/">首頁</a></li><!--
+     --><!--
+       --><li><a href="/blog/about/">關於</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">文章</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/winnie0609">專案</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"複製\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "已複製！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

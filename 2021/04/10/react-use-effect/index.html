@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="此篇文章為看過 Scrimba 線上課程（The Frontend Developer Career Path）之教學影片後的筆記整理，內容與例子大多出自該教學影片。 useEffect 小栗子 可運作 side effect（可以影響其他 component 且在 render 期間無法完成的），如 fetch 資料、訂閱、或手動改變 DOM。 useEffect 包含了 componentDi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React 的 useEffect 使用範例">
+<meta property="og:url" content="https://winnie0609.github.io/blog/2021/04/10/react-use-effect/index.html">
+<meta property="og:site_name" content="Winnie&#39;s blog">
+<meta property="og:description" content="此篇文章為看過 Scrimba 線上課程（The Frontend Developer Career Path）之教學影片後的筆記整理，內容與例子大多出自該教學影片。 useEffect 小栗子 可運作 side effect（可以影響其他 component 且在 render 期間無法完成的），如 fetch 資料、訂閱、或手動改變 DOM。 useEffect 包含了 componentDi">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://i.imgur.com/25DwJYu.png">
+<meta property="og:image" content="https://i.imgur.com/WeOqBBY.gif">
+<meta property="og:image" content="https://i.imgur.com/IJGwabu.gif">
+<meta property="article:published_time" content="2021-04-10T08:43:07.000Z">
+<meta property="article:modified_time" content="2023-07-30T09:28:57.192Z">
+<meta property="article:author" content="Winnie">
+<meta property="article:tag" content="react">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/25DwJYu.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/blog/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>React 的 useEffect 使用範例</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"
+    ><i class="fa-solid fa-bars fa-lg"></i
+  ></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"
+    ><i class="fa-solid fa-bars fa-lg"></i
+  ></a>
+  <a
+    id="top-icon-tablet"
+    href="#"
+    aria-label="Top"
+    onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"
+    style="display: none"
+    ><i class="fa-solid fa-chevron-up fa-lg"></i
+  ></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       -->
+        <li>
+          <a href="/blog/"
+            >首頁</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a href="/blog/about/"
+            >關於</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a href="/blog/archives/"
+            >文章</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a target="_blank" rel="noopener" href="http://github.com/winnie0609"
+            >專案</a
+          >
+        </li>
+        <!--
+     -->
+      </ul>
+    </span>
+    <br />
+    <span id="actions">
+      <ul>
+        
+        <li>
+          <a
+            class="icon"
+            aria-label="上一篇"
+            href="/blog/2021/06/20/js-this/"
+            ><i
+              class="fa-solid fa-chevron-left"
+              aria-hidden="true"
+              onmouseover="$('#i-prev').toggle();"
+              onmouseout="$('#i-prev').toggle();"
+            ></i
+          ></a>
+        </li>
+         
+        <li>
+          <a
+            class="icon"
+            aria-label="下一篇"
+            href="/blog/2021/04/09/react-form/"
+            ><i
+              class="fa-solid fa-chevron-right"
+              aria-hidden="true"
+              onmouseover="$('#i-next').toggle();"
+              onmouseout="$('#i-next').toggle();"
+            ></i
+          ></a>
+        </li>
+        
+        <li>
+          <a
+            class="icon"
+            aria-label="回到頁首"
+            href="#"
+            onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"
+            ><i
+              class="fa-solid fa-chevron-up"
+              aria-hidden="true"
+              onmouseover="$('#i-top').toggle();"
+              onmouseout="$('#i-top').toggle();"
+            ></i
+          ></a>
+        </li>
+        <li>
+          <a class="icon" aria-label="分享" href="#"
+            ><i
+              class="fa-solid fa-share-alt"
+              aria-hidden="true"
+              onmouseover="$('#i-share').toggle();"
+              onmouseout="$('#i-share').toggle();"
+              onclick="$('#share').toggle();return false;"
+            ></i
+          ></a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display: none"
+        >上一篇</span
+      >
+      <span id="i-next" class="info" style="display: none"
+        >下一篇</span
+      >
+      <span id="i-top" class="info" style="display: none"
+        >回到頁首</span
+      >
+      <span id="i-share" class="info" style="display: none"
+        >分享</span
+      >
+    </span>
+    <br />
+    <div id="share" style="display: none">
+      <ul>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://winnie0609.github.io/blog/2021/04/10/react-use-effect/"
+      ><i class="fab fa-facebook " aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://twitter.com/share?url=https://winnie0609.github.io/blog/2021/04/10/react-use-effect/&text=React 的 useEffect 使用範例"
+      ><i class="fab fa-twitter " aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://winnie0609.github.io/blog/2021/04/10/react-use-effect/&title=React 的 useEffect 使用範例"
+      ><i class="fab fa-linkedin " aria-hidden="true"></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://winnie0609.github.io/blog/2021/04/10/react-use-effect/&is_video=false&description=React 的 useEffect 使用範例"
+      ><i class="fab fa-pinterest " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <li>
+    <a
+      class="icon"
+      href="mailto:?subject=React 的 useEffect 使用範例&body=Check out this article: https://winnie0609.github.io/blog/2021/04/10/react-use-effect/"
+      ><i
+        class="fa-solid fa-envelope "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://winnie0609.github.io/blog/2021/04/10/react-use-effect/&title=React 的 useEffect 使用範例"
+      ><i
+        class="fab fa-get-pocket "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://winnie0609.github.io/blog/2021/04/10/react-use-effect/&title=React 的 useEffect 使用範例"
+      ><i class="fab fa-reddit " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://winnie0609.github.io/blog/2021/04/10/react-use-effect/&title=React 的 useEffect 使用範例"
+      ><i
+        class="fab fa-stumbleupon "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://digg.com/submit?url=https://winnie0609.github.io/blog/2021/04/10/react-use-effect/&title=React 的 useEffect 使用範例"
+      ><i class="fab fa-digg " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://winnie0609.github.io/blog/2021/04/10/react-use-effect/&name=React 的 useEffect 使用範例&description="
+      ><i class="fab fa-tumblr " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://winnie0609.github.io/blog/2021/04/10/react-use-effect/&t=React 的 useEffect 使用範例"
+      ><i
+        class="fab fa-hacker-news "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+</ul>
+
+    </div>
+     
+    <div id="toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#useEffect-%E5%B0%8F%E6%A0%97%E5%AD%90"><span class="toc-number">1.</span> <span class="toc-text">useEffect 小栗子</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F"><span class="toc-number">1.1.</span> <span class="toc-text">注意</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%9E%E9%A0%90%E6%9C%9F%E6%95%88%E6%9E%9C"><span class="toc-number">1.1.1.</span> <span class="toc-text">非預期效果</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A0%90%E6%9C%9F%E6%95%88%E6%9E%9C"><span class="toc-number">1.1.2.</span> <span class="toc-text">預期效果</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%85%E9%99%A4-effect"><span class="toc-number">2.</span> <span class="toc-text">清除 effect</span></a></li></ol></div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        React 的 useEffect 使用範例
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Winnie</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-04-10T08:43:07.000Z" class="dt-published" itemprop="datePublished">2021-04-10</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/blog/tags/react/" rel="tag">react</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>此篇文章為看過 Scrimba 線上課程（<a target="_blank" rel="noopener" href="https://scrimba.com/learn/frontend">The Frontend Developer Career Path</a>）之教學影片後的筆記整理，內容與例子大多出自該教學影片。</p>
+<h2 id="useEffect-小栗子"><a href="#useEffect-小栗子" class="headerlink" title="useEffect 小栗子"></a>useEffect 小栗子</h2><ul>
+<li>可運作 side effect（可以影響其他 component 且在 render 期間無法完成的），如 fetch 資料、訂閱、或手動改變 DOM。</li>
+<li>useEffect 包含了 componentDidMount ，componentDidUpdate ，以及 componentWillUnmount 的功能</li>
+<li><strong>每一次 render 都會執行 useEffect，因此要設定在某個條件下才會觸發這個 function</strong></li>
+<li>計數器例子</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//引入useEffect</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">React</span>, &#123; useState, useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Example</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = <span class="title function_">useState</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 與 componentDidMount 和 componentDidUpdate 類似：</span></span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 使用瀏覽器 API 更新文件標題</span></span><br><span class="line">    <span class="variable language_">document</span>.<span class="property">title</span> = <span class="string">`You clicked <span class="subst">$&#123;count&#125;</span> times`</span>;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">p</span>&gt;</span>You clicked &#123;count&#125; times<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> setCount(count + 1)&#125;&gt;Click me<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">Example</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>計數器+random color 例子</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span>, &#123; useState, useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> randomcolor <span class="keyword">from</span> <span class="string">&#x27;randomcolor&#x27;</span>;</span><br><span class="line"><span class="comment">//引入了別的 library</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = <span class="title function_">useState</span>(<span class="number">0</span>);</span><br><span class="line">  <span class="keyword">const</span> [color, setColor] = <span class="title function_">useState</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">increment</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">setCount</span>(<span class="function">(<span class="params">prevCount</span>) =&gt;</span> prevCount + <span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">decrement</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">setCount</span>(<span class="function">(<span class="params">prevCount</span>) =&gt;</span> prevCount - <span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">setColor</span>(<span class="title function_">randomcolor</span>());</span><br><span class="line">  &#125;, [count]); <span class="comment">//執行條件設為當count改變時</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h1</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span> <span class="attr">color:</span> <span class="attr">color</span> &#125;&#125;&gt;</span>&#123;count&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;increment&#125;</span>&gt;</span>Increment<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;decrement&#125;</span>&gt;</span>Decrement<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">App</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><ul>
+<li>因為每一次重新 render，都會重新呼叫 useEffect 這個 function，所以要設定條件。</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//這樣寫會導致這個function一直被呼叫</span></span><br><span class="line"><span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">setColor</span>(<span class="title function_">randomcolor</span>());</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="非預期效果"><a href="#非預期效果" class="headerlink" title="非預期效果"></a>非預期效果</h4><p><a target="_blank" rel="noopener" href="https://i.imgur.com/25DwJYu.png"><img src="https://i.imgur.com/25DwJYu.png"></a><br><a target="_blank" rel="noopener" href="https://i.imgur.com/WeOqBBY.gif"><img src="https://i.imgur.com/WeOqBBY.gif"></a></p>
+<h4 id="預期效果"><a href="#預期效果" class="headerlink" title="預期效果"></a>預期效果</h4><p><a target="_blank" rel="noopener" href="https://i.imgur.com/IJGwabu.gif"><img src="https://i.imgur.com/IJGwabu.gif"></a></p>
+<h2 id="清除-effect"><a href="#清除-effect" class="headerlink" title="清除 effect"></a>清除 effect</h2><ul>
+<li>這裡指的 effect 就是我們傳進 useEffect 的 fucntion</li>
+<li>每個 effect 都可以回傳一個會在它之後執行清除的 function</li>
+<li>一個在執行之後需要清除的 function，可以在新增 function 後回傳一個需要清除的 function</li>
+<li>其他不需要清除的就不需要回傳</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">handleStatusChange</span>(<span class="params">status</span>) &#123;</span><br><span class="line">    <span class="title function_">setIsOnline</span>(status.<span class="property">isOnline</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title class_">ChatAPI</span>.<span class="title function_">subscribeToFriendStatus</span>(props.<span class="property">friend</span>.<span class="property">id</span>, handleStatusChange);</span><br><span class="line">  <span class="keyword">return</span> <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title class_">ChatAPI</span>.<span class="title function_">unsubscribeFromFriendStatus</span>(props.<span class="property">friend</span>.<span class="property">id</span>, handleStatusChange);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/blog/">首頁</a></li>
+        
+          <li><a href="/blog/about/">關於</a></li>
+        
+          <li><a href="/blog/archives/">文章</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/winnie0609">專案</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#useEffect-%E5%B0%8F%E6%A0%97%E5%AD%90"><span class="toc-number">1.</span> <span class="toc-text">useEffect 小栗子</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F"><span class="toc-number">1.1.</span> <span class="toc-text">注意</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%9E%E9%A0%90%E6%9C%9F%E6%95%88%E6%9E%9C"><span class="toc-number">1.1.1.</span> <span class="toc-text">非預期效果</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A0%90%E6%9C%9F%E6%95%88%E6%9E%9C"><span class="toc-number">1.1.2.</span> <span class="toc-text">預期效果</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%85%E9%99%A4-effect"><span class="toc-number">2.</span> <span class="toc-text">清除 effect</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://winnie0609.github.io/blog/2021/04/10/react-use-effect/"
+      ><i class="fab fa-facebook fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://twitter.com/share?url=https://winnie0609.github.io/blog/2021/04/10/react-use-effect/&text=React 的 useEffect 使用範例"
+      ><i class="fab fa-twitter fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://winnie0609.github.io/blog/2021/04/10/react-use-effect/&title=React 的 useEffect 使用範例"
+      ><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://winnie0609.github.io/blog/2021/04/10/react-use-effect/&is_video=false&description=React 的 useEffect 使用範例"
+      ><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <li>
+    <a
+      class="icon"
+      href="mailto:?subject=React 的 useEffect 使用範例&body=Check out this article: https://winnie0609.github.io/blog/2021/04/10/react-use-effect/"
+      ><i
+        class="fa-solid fa-envelope fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://winnie0609.github.io/blog/2021/04/10/react-use-effect/&title=React 的 useEffect 使用範例"
+      ><i
+        class="fab fa-get-pocket fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://winnie0609.github.io/blog/2021/04/10/react-use-effect/&title=React 的 useEffect 使用範例"
+      ><i class="fab fa-reddit fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://winnie0609.github.io/blog/2021/04/10/react-use-effect/&title=React 的 useEffect 使用範例"
+      ><i
+        class="fab fa-stumbleupon fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://digg.com/submit?url=https://winnie0609.github.io/blog/2021/04/10/react-use-effect/&title=React 的 useEffect 使用範例"
+      ><i class="fab fa-digg fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://winnie0609.github.io/blog/2021/04/10/react-use-effect/&name=React 的 useEffect 使用範例&description="
+      ><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://winnie0609.github.io/blog/2021/04/10/react-use-effect/&t=React 的 useEffect 使用範例"
+      ><i
+        class="fab fa-hacker-news fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 選單</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 文章目錄</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 頁首</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    &copy;
+    
+    
+    2023
+    Winnie 
+    | Powered by <a href="hexo.io/">Hexo</a> & <a target="_blank" rel="noopener" href="https://github.com/probberechts/hexo-theme-cactus">Cactus</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/blog/">首頁</a></li><!--
+     --><!--
+       --><li><a href="/blog/about/">關於</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">文章</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/winnie0609">專案</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"複製\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "已複製！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

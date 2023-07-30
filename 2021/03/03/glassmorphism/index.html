@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="玻璃擬態 (Glassmorphism) 畫面實作">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【實作記錄】玻璃擬態登入頁面">
+<meta property="og:url" content="https://winnie0609.github.io/blog/2021/03/03/glassmorphism/index.html">
+<meta property="og:site_name" content="Winnie&#39;s blog">
+<meta property="og:description" content="玻璃擬態 (Glassmorphism) 畫面實作">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://i.imgur.com/0GnjbUc.gif">
+<meta property="article:published_time" content="2021-03-03T07:20:21.000Z">
+<meta property="article:modified_time" content="2023-07-30T08:44:21.764Z">
+<meta property="article:author" content="Winnie">
+<meta property="article:tag" content="實作紀錄">
+<meta property="article:tag" content="js">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/0GnjbUc.gif">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/blog/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【實作記錄】玻璃擬態登入頁面</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"
+    ><i class="fa-solid fa-bars fa-lg"></i
+  ></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"
+    ><i class="fa-solid fa-bars fa-lg"></i
+  ></a>
+  <a
+    id="top-icon-tablet"
+    href="#"
+    aria-label="Top"
+    onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"
+    style="display: none"
+    ><i class="fa-solid fa-chevron-up fa-lg"></i
+  ></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       -->
+        <li>
+          <a href="/blog/"
+            >首頁</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a href="/blog/about/"
+            >關於</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a href="/blog/archives/"
+            >文章</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a target="_blank" rel="noopener" href="http://github.com/winnie0609"
+            >專案</a
+          >
+        </li>
+        <!--
+     -->
+      </ul>
+    </span>
+    <br />
+    <span id="actions">
+      <ul>
+        
+        <li>
+          <a
+            class="icon"
+            aria-label="上一篇"
+            href="/blog/2021/03/12/dice-game/"
+            ><i
+              class="fa-solid fa-chevron-left"
+              aria-hidden="true"
+              onmouseover="$('#i-prev').toggle();"
+              onmouseout="$('#i-prev').toggle();"
+            ></i
+          ></a>
+        </li>
+         
+        <li>
+          <a
+            class="icon"
+            aria-label="回到頁首"
+            href="#"
+            onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"
+            ><i
+              class="fa-solid fa-chevron-up"
+              aria-hidden="true"
+              onmouseover="$('#i-top').toggle();"
+              onmouseout="$('#i-top').toggle();"
+            ></i
+          ></a>
+        </li>
+        <li>
+          <a class="icon" aria-label="分享" href="#"
+            ><i
+              class="fa-solid fa-share-alt"
+              aria-hidden="true"
+              onmouseover="$('#i-share').toggle();"
+              onmouseout="$('#i-share').toggle();"
+              onclick="$('#share').toggle();return false;"
+            ></i
+          ></a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display: none"
+        >上一篇</span
+      >
+      <span id="i-next" class="info" style="display: none"
+        >下一篇</span
+      >
+      <span id="i-top" class="info" style="display: none"
+        >回到頁首</span
+      >
+      <span id="i-share" class="info" style="display: none"
+        >分享</span
+      >
+    </span>
+    <br />
+    <div id="share" style="display: none">
+      <ul>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://winnie0609.github.io/blog/2021/03/03/glassmorphism/"
+      ><i class="fab fa-facebook " aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://twitter.com/share?url=https://winnie0609.github.io/blog/2021/03/03/glassmorphism/&text=【實作記錄】玻璃擬態登入頁面"
+      ><i class="fab fa-twitter " aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://winnie0609.github.io/blog/2021/03/03/glassmorphism/&title=【實作記錄】玻璃擬態登入頁面"
+      ><i class="fab fa-linkedin " aria-hidden="true"></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://winnie0609.github.io/blog/2021/03/03/glassmorphism/&is_video=false&description=【實作記錄】玻璃擬態登入頁面"
+      ><i class="fab fa-pinterest " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <li>
+    <a
+      class="icon"
+      href="mailto:?subject=【實作記錄】玻璃擬態登入頁面&body=Check out this article: https://winnie0609.github.io/blog/2021/03/03/glassmorphism/"
+      ><i
+        class="fa-solid fa-envelope "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://winnie0609.github.io/blog/2021/03/03/glassmorphism/&title=【實作記錄】玻璃擬態登入頁面"
+      ><i
+        class="fab fa-get-pocket "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://winnie0609.github.io/blog/2021/03/03/glassmorphism/&title=【實作記錄】玻璃擬態登入頁面"
+      ><i class="fab fa-reddit " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://winnie0609.github.io/blog/2021/03/03/glassmorphism/&title=【實作記錄】玻璃擬態登入頁面"
+      ><i
+        class="fab fa-stumbleupon "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://digg.com/submit?url=https://winnie0609.github.io/blog/2021/03/03/glassmorphism/&title=【實作記錄】玻璃擬態登入頁面"
+      ><i class="fab fa-digg " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://winnie0609.github.io/blog/2021/03/03/glassmorphism/&name=【實作記錄】玻璃擬態登入頁面&description="
+      ><i class="fab fa-tumblr " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://winnie0609.github.io/blog/2021/03/03/glassmorphism/&t=【實作記錄】玻璃擬態登入頁面"
+      ><i
+        class="fab fa-hacker-news "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+</ul>
+
+    </div>
+     
+    <div id="toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B0%A1%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">簡介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">2.</span> <span class="toc-text">功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%AD%86%E8%A8%98"><span class="toc-number">3.</span> <span class="toc-text">小筆記</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Glassmorphism-%E6%95%88%E6%9E%9C"><span class="toc-number">3.1.</span> <span class="toc-text">Glassmorphism 效果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hover-%E5%BA%95%E7%B7%9A%E6%95%88%E6%9E%9C"><span class="toc-number">3.2.</span> <span class="toc-text">Hover 底線效果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%83%8C%E6%99%AF%E5%9C%96%E7%B8%AE%E6%94%BE%E4%B8%8D%E5%BD%B1%E9%9F%BF%E6%AF%94%E4%BE%8B"><span class="toc-number">3.3.</span> <span class="toc-text">背景圖縮放不影響比例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%B5%90"><span class="toc-number">4.</span> <span class="toc-text">小結</span></a></li></ol></div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        【實作記錄】玻璃擬態登入頁面
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Winnie</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-03-03T07:20:21.000Z" class="dt-published" itemprop="datePublished">2021-03-03</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/blog/tags/js/" rel="tag">js</a>, <a class="p-category" href="/blog/tags/%E5%AF%A6%E4%BD%9C%E7%B4%80%E9%8C%84/" rel="tag">實作紀錄</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p><a href="https://winnie0609.github.io/glassmorphism-login-page/login.html">live Demo</a><br><a target="_blank" rel="noopener" href="https://github.com/Winnie0609/glassmorphism-login-page">Github</a><br><a target="_blank" rel="noopener" href="https://codepen.io/huiniong/full/mdOKYyG">Code Pen</a></p>
+<p><a target="_blank" rel="noopener" href="https://i.imgur.com/0GnjbUc.gif"><img src="https://i.imgur.com/0GnjbUc.gif" alt="Login Page Demo"></a></p>
+<h2 id="簡介"><a href="#簡介" class="headerlink" title="簡介"></a>簡介</h2><p>這是接觸網頁前端三巨頭時練習的第一個小作品。尚未學習 RWD 之觀念，因此畫面在手機觀看會爆掉 QAQ。頁面呈現玻璃擬態(Glassmorphism) 效果。</p>
+<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><ul>
+<li>CSS: 用戶輸入的部分設置了 Placeholder</li>
+<li>CSS: 每一個預設可以點擊之按鈕都設置了 hover 效果</li>
+<li>JS: 用戶點擊 Sign in 按鈕後，先前輸入的資料會淨空</li>
+<li>JS: 設置了用戶輸入提醒，若缺少用戶名&#x2F;密碼將會跳出警告</li>
+<li>JS: 用戶名與密碼藉有輸入將會跳出 “username, Welcome!” 之字樣</li>
+</ul>
+<h2 id="小筆記"><a href="#小筆記" class="headerlink" title="小筆記"></a>小筆記</h2><p>記錄一些 CSS 小筆記，作往後回顧之用。</p>
+<h3 id="Glassmorphism-效果"><a href="#Glassmorphism-效果" class="headerlink" title="Glassmorphism 效果"></a>Glassmorphism 效果</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">.<span class="property">loginSec</span>&#123;</span><br><span class="line">    <span class="attr">padding</span>: 42px 22px;</span><br><span class="line">    border-<span class="attr">radius</span>: 10px;</span><br><span class="line">    background-<span class="attr">color</span>: <span class="title function_">rgba</span>(<span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>, <span class="number">0.10</span>);</span><br><span class="line">    <span class="attr">border</span>: 1px solid <span class="title function_">rgba</span>(<span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>, <span class="number">0.15</span>);</span><br><span class="line">    backdrop-<span class="attr">filter</span>: <span class="title function_">blur</span>(10px);</span><br><span class="line">    box-<span class="attr">shadow</span>:</span><br><span class="line">    <span class="number">0</span> <span class="number">0.</span>9px <span class="number">8.</span>5px -9px <span class="title function_">rgba</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0.041</span>),</span><br><span class="line">    <span class="number">0</span> <span class="number">2.</span>4px <span class="number">23.</span>5px -9px <span class="title function_">rgba</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0.069</span>),</span><br><span class="line">    <span class="number">0</span> <span class="number">5.</span>7px <span class="number">56.</span>7px -9px <span class="title function_">rgba</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0.098</span>),</span><br><span class="line">    <span class="number">0</span> 19px 188px -9px <span class="title function_">rgba</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0.16</span>)</span><br><span class="line">    ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Hover-底線效果"><a href="#Hover-底線效果" class="headerlink" title="Hover 底線效果"></a>Hover 底線效果</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#<span class="attr">forgetBtn</span>::after&#123;</span><br><span class="line">    <span class="attr">content</span>: <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    <span class="attr">display</span>: block;</span><br><span class="line">    border-<span class="attr">bottom</span>: solid <span class="number">1.</span>3px #ffffff;</span><br><span class="line">    <span class="attr">height</span>: <span class="number">1.</span>3px;</span><br><span class="line">    <span class="attr">transform</span>: <span class="title function_">scaleX</span>(<span class="number">0</span>);</span><br><span class="line">    transform-<span class="attr">origin</span>: <span class="number">0</span>% <span class="number">100</span>%;</span><br><span class="line">    <span class="attr">transition</span>: transform .3s;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#<span class="attr">forgetBtn</span>:<span class="attr">hover</span>:after&#123;</span><br><span class="line">    <span class="attr">transform</span>: <span class="title function_">scaleX</span>(<span class="number">1</span>);</span><br><span class="line">    <span class="attr">transition</span>: transform .3s;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="背景圖縮放不影響比例"><a href="#背景圖縮放不影響比例" class="headerlink" title="背景圖縮放不影響比例"></a>背景圖縮放不影響比例</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">body&#123;</span><br><span class="line">    background-<span class="attr">image</span>: <span class="title function_">url</span>(<span class="string">&quot;https://i.postimg.cc/3rv5HhSL/login-page-background.png&quot;</span>);</span><br><span class="line">    background-<span class="attr">repeat</span>: no-repeat;</span><br><span class="line">    background-<span class="attr">size</span>: cover;</span><br><span class="line">    background-<span class="attr">position</span>: center center;</span><br><span class="line">    background-<span class="attr">attachment</span>: fixed;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="小結"><a href="#小結" class="headerlink" title="小結"></a>小結</h2><p>這個畫面可以改進的地方有很多，由於是第一次練習，因此沒有特別修改，想留下一些<del>黑歷史</del>記錄。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/blog/">首頁</a></li>
+        
+          <li><a href="/blog/about/">關於</a></li>
+        
+          <li><a href="/blog/archives/">文章</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/winnie0609">專案</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B0%A1%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">簡介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">2.</span> <span class="toc-text">功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%AD%86%E8%A8%98"><span class="toc-number">3.</span> <span class="toc-text">小筆記</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Glassmorphism-%E6%95%88%E6%9E%9C"><span class="toc-number">3.1.</span> <span class="toc-text">Glassmorphism 效果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hover-%E5%BA%95%E7%B7%9A%E6%95%88%E6%9E%9C"><span class="toc-number">3.2.</span> <span class="toc-text">Hover 底線效果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%83%8C%E6%99%AF%E5%9C%96%E7%B8%AE%E6%94%BE%E4%B8%8D%E5%BD%B1%E9%9F%BF%E6%AF%94%E4%BE%8B"><span class="toc-number">3.3.</span> <span class="toc-text">背景圖縮放不影響比例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%B5%90"><span class="toc-number">4.</span> <span class="toc-text">小結</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://winnie0609.github.io/blog/2021/03/03/glassmorphism/"
+      ><i class="fab fa-facebook fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://twitter.com/share?url=https://winnie0609.github.io/blog/2021/03/03/glassmorphism/&text=【實作記錄】玻璃擬態登入頁面"
+      ><i class="fab fa-twitter fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://winnie0609.github.io/blog/2021/03/03/glassmorphism/&title=【實作記錄】玻璃擬態登入頁面"
+      ><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://winnie0609.github.io/blog/2021/03/03/glassmorphism/&is_video=false&description=【實作記錄】玻璃擬態登入頁面"
+      ><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <li>
+    <a
+      class="icon"
+      href="mailto:?subject=【實作記錄】玻璃擬態登入頁面&body=Check out this article: https://winnie0609.github.io/blog/2021/03/03/glassmorphism/"
+      ><i
+        class="fa-solid fa-envelope fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://winnie0609.github.io/blog/2021/03/03/glassmorphism/&title=【實作記錄】玻璃擬態登入頁面"
+      ><i
+        class="fab fa-get-pocket fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://winnie0609.github.io/blog/2021/03/03/glassmorphism/&title=【實作記錄】玻璃擬態登入頁面"
+      ><i class="fab fa-reddit fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://winnie0609.github.io/blog/2021/03/03/glassmorphism/&title=【實作記錄】玻璃擬態登入頁面"
+      ><i
+        class="fab fa-stumbleupon fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://digg.com/submit?url=https://winnie0609.github.io/blog/2021/03/03/glassmorphism/&title=【實作記錄】玻璃擬態登入頁面"
+      ><i class="fab fa-digg fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://winnie0609.github.io/blog/2021/03/03/glassmorphism/&name=【實作記錄】玻璃擬態登入頁面&description="
+      ><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://winnie0609.github.io/blog/2021/03/03/glassmorphism/&t=【實作記錄】玻璃擬態登入頁面"
+      ><i
+        class="fab fa-hacker-news fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 選單</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 文章目錄</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 頁首</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    &copy;
+    
+    
+    2023
+    Winnie 
+    | Powered by <a href="hexo.io/">Hexo</a> & <a target="_blank" rel="noopener" href="https://github.com/probberechts/hexo-theme-cactus">Cactus</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/blog/">首頁</a></li><!--
+     --><!--
+       --><li><a href="/blog/about/">關於</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">文章</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/winnie0609">專案</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"複製\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "已複製！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

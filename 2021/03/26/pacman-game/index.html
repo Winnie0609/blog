@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="這是一款使用 JavaScript 製作的小精靈遊戲。玩家將所有點點吃完便會獲勝、被精靈吃掉遊戲便結束。點點分數為 1 分、大點點 (power pallet) 為 10 分、吃掉害怕狀態的精靈增加 100 分。其中也添加了音效，默認為關閉，可點擊右上的 &quot;volume icon&quot; 打開。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【實作記錄】Pacman Game">
+<meta property="og:url" content="https://winnie0609.github.io/blog/2021/03/26/pacman-game/index.html">
+<meta property="og:site_name" content="Winnie&#39;s blog">
+<meta property="og:description" content="這是一款使用 JavaScript 製作的小精靈遊戲。玩家將所有點點吃完便會獲勝、被精靈吃掉遊戲便結束。點點分數為 1 分、大點點 (power pallet) 為 10 分、吃掉害怕狀態的精靈增加 100 分。其中也添加了音效，默認為關閉，可點擊右上的 &quot;volume icon&quot; 打開。">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://i.imgur.com/aUPLfkR.gif">
+<meta property="article:published_time" content="2021-03-26T08:12:41.000Z">
+<meta property="article:modified_time" content="2023-07-30T08:38:07.312Z">
+<meta property="article:author" content="Winnie">
+<meta property="article:tag" content="實作紀錄">
+<meta property="article:tag" content="js">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/aUPLfkR.gif">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/blog/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【實作記錄】Pacman Game</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"
+    ><i class="fa-solid fa-bars fa-lg"></i
+  ></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"
+    ><i class="fa-solid fa-bars fa-lg"></i
+  ></a>
+  <a
+    id="top-icon-tablet"
+    href="#"
+    aria-label="Top"
+    onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"
+    style="display: none"
+    ><i class="fa-solid fa-chevron-up fa-lg"></i
+  ></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       -->
+        <li>
+          <a href="/blog/"
+            >首頁</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a href="/blog/about/"
+            >關於</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a href="/blog/archives/"
+            >文章</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a target="_blank" rel="noopener" href="http://github.com/winnie0609"
+            >專案</a
+          >
+        </li>
+        <!--
+     -->
+      </ul>
+    </span>
+    <br />
+    <span id="actions">
+      <ul>
+        
+        <li>
+          <a
+            class="icon"
+            aria-label="上一篇"
+            href="/blog/2021/04/02/meme-generator/"
+            ><i
+              class="fa-solid fa-chevron-left"
+              aria-hidden="true"
+              onmouseover="$('#i-prev').toggle();"
+              onmouseout="$('#i-prev').toggle();"
+            ></i
+          ></a>
+        </li>
+         
+        <li>
+          <a
+            class="icon"
+            aria-label="下一篇"
+            href="/blog/2021/03/15/snake-game/"
+            ><i
+              class="fa-solid fa-chevron-right"
+              aria-hidden="true"
+              onmouseover="$('#i-next').toggle();"
+              onmouseout="$('#i-next').toggle();"
+            ></i
+          ></a>
+        </li>
+        
+        <li>
+          <a
+            class="icon"
+            aria-label="回到頁首"
+            href="#"
+            onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"
+            ><i
+              class="fa-solid fa-chevron-up"
+              aria-hidden="true"
+              onmouseover="$('#i-top').toggle();"
+              onmouseout="$('#i-top').toggle();"
+            ></i
+          ></a>
+        </li>
+        <li>
+          <a class="icon" aria-label="分享" href="#"
+            ><i
+              class="fa-solid fa-share-alt"
+              aria-hidden="true"
+              onmouseover="$('#i-share').toggle();"
+              onmouseout="$('#i-share').toggle();"
+              onclick="$('#share').toggle();return false;"
+            ></i
+          ></a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display: none"
+        >上一篇</span
+      >
+      <span id="i-next" class="info" style="display: none"
+        >下一篇</span
+      >
+      <span id="i-top" class="info" style="display: none"
+        >回到頁首</span
+      >
+      <span id="i-share" class="info" style="display: none"
+        >分享</span
+      >
+    </span>
+    <br />
+    <div id="share" style="display: none">
+      <ul>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://winnie0609.github.io/blog/2021/03/26/pacman-game/"
+      ><i class="fab fa-facebook " aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://twitter.com/share?url=https://winnie0609.github.io/blog/2021/03/26/pacman-game/&text=【實作記錄】Pacman Game"
+      ><i class="fab fa-twitter " aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://winnie0609.github.io/blog/2021/03/26/pacman-game/&title=【實作記錄】Pacman Game"
+      ><i class="fab fa-linkedin " aria-hidden="true"></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://winnie0609.github.io/blog/2021/03/26/pacman-game/&is_video=false&description=【實作記錄】Pacman Game"
+      ><i class="fab fa-pinterest " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <li>
+    <a
+      class="icon"
+      href="mailto:?subject=【實作記錄】Pacman Game&body=Check out this article: https://winnie0609.github.io/blog/2021/03/26/pacman-game/"
+      ><i
+        class="fa-solid fa-envelope "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://winnie0609.github.io/blog/2021/03/26/pacman-game/&title=【實作記錄】Pacman Game"
+      ><i
+        class="fab fa-get-pocket "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://winnie0609.github.io/blog/2021/03/26/pacman-game/&title=【實作記錄】Pacman Game"
+      ><i class="fab fa-reddit " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://winnie0609.github.io/blog/2021/03/26/pacman-game/&title=【實作記錄】Pacman Game"
+      ><i
+        class="fab fa-stumbleupon "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://digg.com/submit?url=https://winnie0609.github.io/blog/2021/03/26/pacman-game/&title=【實作記錄】Pacman Game"
+      ><i class="fab fa-digg " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://winnie0609.github.io/blog/2021/03/26/pacman-game/&name=【實作記錄】Pacman Game&description="
+      ><i class="fab fa-tumblr " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://winnie0609.github.io/blog/2021/03/26/pacman-game/&t=【實作記錄】Pacman Game"
+      ><i
+        class="fab fa-hacker-news "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+</ul>
+
+    </div>
+     
+    <div id="toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B0%A1%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">簡介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">2.</span> <span class="toc-text">功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%AD%86%E8%A8%98"><span class="toc-number">3.</span> <span class="toc-text">小筆記</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Pacman-%E7%9A%84%E7%A7%BB%E5%8B%95"><span class="toc-number">3.1.</span> <span class="toc-text">Pacman 的移動</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B2%BE%E9%9D%88%E7%9A%84-class"><span class="toc-number">3.2.</span> <span class="toc-text">精靈的 class</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B2%BE%E9%9D%88%E7%A7%BB%E5%8B%95"><span class="toc-number">3.3.</span> <span class="toc-text">精靈移動</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%A9%E5%AE%B6%E8%B4%8F%E4%BA%86"><span class="toc-number">3.4.</span> <span class="toc-text">玩家贏了</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%B5%90"><span class="toc-number">4.</span> <span class="toc-text">小結</span></a></li></ol></div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        【實作記錄】Pacman Game
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Winnie</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-03-26T08:12:41.000Z" class="dt-published" itemprop="datePublished">2021-03-26</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/blog/tags/js/" rel="tag">js</a>, <a class="p-category" href="/blog/tags/%E5%AF%A6%E4%BD%9C%E7%B4%80%E9%8C%84/" rel="tag">實作紀錄</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p><a href="https://winnie0609.github.io/pacman-game/pacman.html">Live Demo</a><br><a target="_blank" rel="noopener" href="https://github.com/Winnie0609/pacman-game">Github</a><br><a target="_blank" rel="noopener" href="https://codepen.io/huiniong/full/VwpvyVv">CodePen</a></p>
+<p><a target="_blank" rel="noopener" href="https://i.imgur.com/aUPLfkR.gif"><img src="https://i.imgur.com/aUPLfkR.gif" alt="Pacman Game"></a></p>
+<h2 id="簡介"><a href="#簡介" class="headerlink" title="簡介"></a>簡介</h2><p>這是一款使用 JavaScript 製作的小精靈遊戲。玩家將所有點點吃完便會獲勝、被精靈吃掉遊戲便結束。點點分數為 1 分、大點點 (power pallet) 為 10 分、吃掉害怕狀態的精靈增加 100 分。其中也添加了音效，默認為關閉，可點擊右上的 “volume icon” 打開。</p>
+<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><ul>
+<li>使用上下左右鍵移動 Pacman</li>
+<li>吃了 Power Pallet 便可以吃掉顏色為橘色的精靈</li>
+<li>每個動作都有音效，可以透過右上的 “volume icon” 關閉</li>
+<li>吃完點點便會宣佈獲勝</li>
+<li>被精靈吃掉，遊戲便結束</li>
+</ul>
+<h2 id="小筆記"><a href="#小筆記" class="headerlink" title="小筆記"></a>小筆記</h2><h3 id="Pacman-的移動"><a href="#Pacman-的移動" class="headerlink" title="Pacman 的移動"></a>Pacman 的移動</h3><p>Pacman 的上下移動邏輯使用 switch 處理。判斷 pacman 在移動的時候是否碰到墻壁，若沒有碰到墻壁&#x2F;沒有碰到精靈則可以往按鍵的方向行動。</p>
+<ul>
+<li>判斷是否碰到墻壁：如果要往下的那個沒有 “wall” 這個 class ，表示沒有</li>
+<li>判斷是否碰到精靈：如果要往下的那個沒有 “ghost” 這個 class ，表示沒有</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">keycode</th>
+<th align="center"></th>
+<th align="right">移動方式</th>
+<th align="right">判斷方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">40</td>
+<td align="center">往下鍵</td>
+<td align="right">pacman 所在的位置 + width</td>
+<td align="right">判斷是否已經到最底層：如果 pacman 所在 index 加上 width 小於整個 layout 的最大 index， 表示沒有超出邊界</td>
+</tr>
+<tr>
+<td align="left">38</td>
+<td align="center">往上鍵</td>
+<td align="right">pacman 所在的位置 - width</td>
+<td align="right">判斷是否已經到最上層：如果 pacman 所在 index 減掉 width 小於整個 0， 表示沒有超出邊界</td>
+</tr>
+<tr>
+<td align="left">37</td>
+<td align="center">往左鍵</td>
+<td align="right">pacman 所在的位置 -1</td>
+<td align="right">判斷是否已經到最左邊：如果 pacman 所在 index 除 width 的餘數不等於 0， 表示沒有超出邊界</td>
+</tr>
+<tr>
+<td align="left">38</td>
+<td align="center">往右鍵</td>
+<td align="right">pacman 所在的位置 +1</td>
+<td align="right">判斷是否已經到最左邊：如果 pacman 所在 index 除 width 的餘數小於 width - 1， 表示沒有超出邊界</td>
+</tr>
+</tbody></table>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">switch</span>(e.<span class="property">keyCode</span>) &#123;</span><br><span class="line">  <span class="keyword">case</span> <span class="number">40</span> :</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;pressed down&quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> (</span><br><span class="line">        pacmanCurrentIndex + width &lt; width \* width &amp;&amp;</span><br><span class="line">        !squares\[pacmanCurrentIndex + width\].<span class="property">classList</span>.<span class="title function_">contains</span>(<span class="string">&quot;wall&quot;</span>)&amp;&amp;</span><br><span class="line">        !squares\[pacmanCurrentIndex + width\].<span class="property">classList</span>.<span class="title function_">contains</span>(<span class="string">&quot;ghost-liar&quot;</span>)</span><br><span class="line">    )</span><br><span class="line">    pacmanCurrentIndex += width</span><br><span class="line"></span><br><span class="line">  <span class="keyword">break</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="精靈的-class"><a href="#精靈的-class" class="headerlink" title="精靈的 class"></a>精靈的 class</h3><p>由於 4 個精靈是一組的，都有 className 、起始位置、移動速度、當下位置、是否為害怕狀態、計時器，因此使用 class 來處理。需要每一隻精靈執行共同的程式碼就使用 for Each.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Ghost</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">className, startIndex, speed</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">className</span> = className;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">startIndex</span> = startIndex;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">speed</span> = speed;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">currentIndex</span> = startIndex;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">isScared</span> = <span class="literal">false</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">timerId</span> = <span class="title class_">NaN</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//傳入需要的參數：classname, 起始位置，速度</span></span><br><span class="line"><span class="keyword">const</span> ghosts = [</span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">Ghost</span>(<span class="string">&#x27;blinky&#x27;</span>, <span class="number">347</span>, <span class="number">250</span>),</span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">Ghost</span>(<span class="string">&#x27;pinky&#x27;</span>, <span class="number">376</span>, <span class="number">400</span>),</span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">Ghost</span>(<span class="string">&#x27;inky&#x27;</span>, <span class="number">352</span>, <span class="number">300</span>),</span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">Ghost</span>(<span class="string">&#x27;clyde&#x27;</span>, <span class="number">379</span>, <span class="number">500</span>),</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>把精靈畫進 grid 裡</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ghosts.<span class="title function_">forEach</span>(<span class="function">(<span class="params">ghost</span>) =&gt;</span> &#123;</span><br><span class="line">  squares[ghost.<span class="property">currentIndex</span>].<span class="property">classList</span>.<span class="title function_">add</span>(ghost.<span class="property">className</span>);</span><br><span class="line">  squares[ghost.<span class="property">currentIndex</span>].<span class="property">classList</span>.<span class="title function_">add</span>(<span class="string">&#x27;ghost&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="精靈移動"><a href="#精靈移動" class="headerlink" title="精靈移動"></a>精靈移動</h3><ul>
+<li>使用 &#96;Math.random()&#96;&#96; 決定精靈移動的方向，因此方向是沒有邏輯的</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> directions = [-<span class="number">1</span>, +<span class="number">1</span>, -width, +width];</span><br><span class="line"><span class="keyword">let</span> direction = directions[<span class="title class_">Math</span>.<span class="title function_">floor</span>(<span class="title class_">Math</span>.<span class="title function_">random</span>() * directions.<span class="property">length</span>)];</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>沒有碰到碰到精靈或墻壁，就可以往隨機選出來的方向前進一格</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (</span><br><span class="line">    !squares\[ghost.<span class="property">currentIndex</span> + direction\].<span class="property">classList</span>.<span class="title function_">contains</span>(<span class="string">&quot;wall&quot;</span>)  &amp;&amp;</span><br><span class="line">    !squares\[ghost.<span class="property">currentIndex</span> + direction\].<span class="property">classList</span>.<span class="title function_">contains</span>(<span class="string">&quot;ghost&quot;</span>)</span><br><span class="line">)&#123;</span><br><span class="line">    squares\[ghost.<span class="property">currentIndex</span>\].<span class="property">classList</span>.<span class="title function_">remove</span>(ghost.<span class="property">className</span>)</span><br><span class="line">    squares\[ghost.<span class="property">currentIndex</span>\].<span class="property">classList</span>.<span class="title function_">remove</span>(<span class="string">&quot;ghost&quot;</span>, <span class="string">&quot;scared-ghost&quot;</span>)</span><br><span class="line">    ghost.<span class="property">currentIndex</span> += direction</span><br><span class="line"></span><br><span class="line">    squares\[ghost.<span class="property">currentIndex</span>\].<span class="property">classList</span>.<span class="title function_">add</span>(ghost.<span class="property">className</span>)</span><br><span class="line">    squares\[ghost.<span class="property">currentIndex</span>\].<span class="property">classList</span>.<span class="title function_">add</span>(<span class="string">&quot;ghost&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在吃了 power pallet 之後，精靈會轉為 scared 狀態，就可以被吃</li>
+<li>this.isScared &#x3D; true</li>
+<li>會轉為橘色</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (</span><br><span class="line">    ghost.<span class="property">isScared</span> &amp;&amp; squares\[ghost.<span class="property">currentIndex</span>\].<span class="property">classList</span>.<span class="title function_">contains</span>(<span class="string">&quot;pacman&quot;</span>)</span><br><span class="line">  )&#123;</span><br><span class="line">    squares\[ghost.<span class="property">currentIndex</span>\].<span class="property">classList</span>.<span class="title function_">remove</span>(ghost.<span class="property">className</span>,<span class="string">&quot;scared-ghost&quot;</span>)</span><br><span class="line">    ghost.<span class="property">currentIndex</span> = ghost.<span class="property">startIndex</span></span><br><span class="line">    score += <span class="number">100</span></span><br><span class="line">    squares\[ghost.<span class="property">currentIndex</span>\].<span class="property">classList</span>.<span class="title function_">add</span>(ghost.<span class="property">className</span> , <span class="string">&quot;ghost&quot;</span>)</span><br><span class="line">    <span class="title function_">eatGhostSound</span>()</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>遊戲結束</li>
+<li>碰到精靈遊戲便會結束</li>
+<li>計時器會被清除，按鍵被移除，game over 字樣出現</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (</span><br><span class="line">    !ghost.<span class="property">isScared</span> &amp;&amp; squares\[ghost.<span class="property">currentIndex</span>\].<span class="property">classList</span>.<span class="title function_">contains</span>(<span class="string">&quot;pacman&quot;</span>)</span><br><span class="line">)&#123;</span><br><span class="line">    ghosts.<span class="title function_">forEach</span>(<span class="function"><span class="params">ghost</span> =&gt;</span> <span class="built_in">clearInterval</span>(ghost.<span class="property">timerId</span>))</span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">removeEventListener</span>(<span class="string">&quot;keydown&quot;</span>, control)</span><br><span class="line">    gameOver.<span class="property">style</span>.<span class="property">display</span> = <span class="string">&quot;block&quot;</span></span><br><span class="line">    overlay.<span class="property">style</span>.<span class="property">display</span>=<span class="string">&quot;block&quot;</span></span><br><span class="line">    <span class="title function_">deathSound</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="玩家贏了"><a href="#玩家贏了" class="headerlink" title="玩家贏了"></a>玩家贏了</h3><ul>
+<li>吃完所有點點就宣佈獲勝</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> dot = <span class="number">305</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">win</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (dot === <span class="number">0</span>) &#123;</span><br><span class="line">    ghosts.<span class="title function_">forEach</span>(<span class="function">(<span class="params">ghost</span>) =&gt;</span> <span class="built_in">clearInterval</span>(ghost.<span class="property">timerId</span>));</span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">removeEventListener</span>(<span class="string">&#x27;keydown&#x27;</span>, control);</span><br><span class="line">    gameWin.<span class="property">style</span>.<span class="property">display</span> = <span class="string">&#x27;block&#x27;</span>;</span><br><span class="line">    overlay.<span class="property">style</span>.<span class="property">display</span> = <span class="string">&#x27;block&#x27;</span>;</span><br><span class="line">    <span class="title function_">winSound</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="小結"><a href="#小結" class="headerlink" title="小結"></a>小結</h2><p>這個小遊戲中練習了 class 以及 switch. 這裡沒有處理精靈移動的邏輯，原本應該追著 &#x2F; 包抄 pacman， 但因為是使用隨機方向，因此精靈們看起來很笨（扶額）。這個部分等我找到比較好的方式再來看看怎麼讓他們聰明一些。畫地圖是使用 excel 先畫一遍，再把他們轉為 index，才填上顏色。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/blog/">首頁</a></li>
+        
+          <li><a href="/blog/about/">關於</a></li>
+        
+          <li><a href="/blog/archives/">文章</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/winnie0609">專案</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B0%A1%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">簡介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">2.</span> <span class="toc-text">功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%AD%86%E8%A8%98"><span class="toc-number">3.</span> <span class="toc-text">小筆記</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Pacman-%E7%9A%84%E7%A7%BB%E5%8B%95"><span class="toc-number">3.1.</span> <span class="toc-text">Pacman 的移動</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B2%BE%E9%9D%88%E7%9A%84-class"><span class="toc-number">3.2.</span> <span class="toc-text">精靈的 class</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B2%BE%E9%9D%88%E7%A7%BB%E5%8B%95"><span class="toc-number">3.3.</span> <span class="toc-text">精靈移動</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%A9%E5%AE%B6%E8%B4%8F%E4%BA%86"><span class="toc-number">3.4.</span> <span class="toc-text">玩家贏了</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%B5%90"><span class="toc-number">4.</span> <span class="toc-text">小結</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://winnie0609.github.io/blog/2021/03/26/pacman-game/"
+      ><i class="fab fa-facebook fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://twitter.com/share?url=https://winnie0609.github.io/blog/2021/03/26/pacman-game/&text=【實作記錄】Pacman Game"
+      ><i class="fab fa-twitter fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://winnie0609.github.io/blog/2021/03/26/pacman-game/&title=【實作記錄】Pacman Game"
+      ><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://winnie0609.github.io/blog/2021/03/26/pacman-game/&is_video=false&description=【實作記錄】Pacman Game"
+      ><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <li>
+    <a
+      class="icon"
+      href="mailto:?subject=【實作記錄】Pacman Game&body=Check out this article: https://winnie0609.github.io/blog/2021/03/26/pacman-game/"
+      ><i
+        class="fa-solid fa-envelope fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://winnie0609.github.io/blog/2021/03/26/pacman-game/&title=【實作記錄】Pacman Game"
+      ><i
+        class="fab fa-get-pocket fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://winnie0609.github.io/blog/2021/03/26/pacman-game/&title=【實作記錄】Pacman Game"
+      ><i class="fab fa-reddit fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://winnie0609.github.io/blog/2021/03/26/pacman-game/&title=【實作記錄】Pacman Game"
+      ><i
+        class="fab fa-stumbleupon fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://digg.com/submit?url=https://winnie0609.github.io/blog/2021/03/26/pacman-game/&title=【實作記錄】Pacman Game"
+      ><i class="fab fa-digg fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://winnie0609.github.io/blog/2021/03/26/pacman-game/&name=【實作記錄】Pacman Game&description="
+      ><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://winnie0609.github.io/blog/2021/03/26/pacman-game/&t=【實作記錄】Pacman Game"
+      ><i
+        class="fab fa-hacker-news fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 選單</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 文章目錄</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 頁首</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    &copy;
+    
+    
+    2023
+    Winnie 
+    | Powered by <a href="hexo.io/">Hexo</a> & <a target="_blank" rel="noopener" href="https://github.com/probberechts/hexo-theme-cactus">Cactus</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/blog/">首頁</a></li><!--
+     --><!--
+       --><li><a href="/blog/about/">關於</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">文章</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/winnie0609">專案</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"複製\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "已複製！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

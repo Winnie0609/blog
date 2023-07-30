@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="React 表單與例子">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React 表單">
+<meta property="og:url" content="https://winnie0609.github.io/blog/2021/04/09/react-form/index.html">
+<meta property="og:site_name" content="Winnie&#39;s blog">
+<meta property="og:description" content="React 表單與例子">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://i.imgur.com/UdXegvs.gif">
+<meta property="og:image" content="https://i.imgur.com/MkiVZyR.png">
+<meta property="og:image" content="https://i.imgur.com/r0TFSLh.png">
+<meta property="og:image" content="https://i.imgur.com/V880vEP.gif">
+<meta property="article:published_time" content="2021-04-09T08:45:28.000Z">
+<meta property="article:modified_time" content="2023-07-30T09:01:49.511Z">
+<meta property="article:author" content="Winnie">
+<meta property="article:tag" content="react">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/UdXegvs.gif">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/blog/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>React 表單</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"
+    ><i class="fa-solid fa-bars fa-lg"></i
+  ></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"
+    ><i class="fa-solid fa-bars fa-lg"></i
+  ></a>
+  <a
+    id="top-icon-tablet"
+    href="#"
+    aria-label="Top"
+    onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"
+    style="display: none"
+    ><i class="fa-solid fa-chevron-up fa-lg"></i
+  ></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       -->
+        <li>
+          <a href="/blog/"
+            >首頁</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a href="/blog/about/"
+            >關於</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a href="/blog/archives/"
+            >文章</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a target="_blank" rel="noopener" href="http://github.com/winnie0609"
+            >專案</a
+          >
+        </li>
+        <!--
+     -->
+      </ul>
+    </span>
+    <br />
+    <span id="actions">
+      <ul>
+        
+        <li>
+          <a
+            class="icon"
+            aria-label="上一篇"
+            href="/blog/2021/04/10/react-use-effect/"
+            ><i
+              class="fa-solid fa-chevron-left"
+              aria-hidden="true"
+              onmouseover="$('#i-prev').toggle();"
+              onmouseout="$('#i-prev').toggle();"
+            ></i
+          ></a>
+        </li>
+         
+        <li>
+          <a
+            class="icon"
+            aria-label="下一篇"
+            href="/blog/2021/04/02/meme-generator/"
+            ><i
+              class="fa-solid fa-chevron-right"
+              aria-hidden="true"
+              onmouseover="$('#i-next').toggle();"
+              onmouseout="$('#i-next').toggle();"
+            ></i
+          ></a>
+        </li>
+        
+        <li>
+          <a
+            class="icon"
+            aria-label="回到頁首"
+            href="#"
+            onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"
+            ><i
+              class="fa-solid fa-chevron-up"
+              aria-hidden="true"
+              onmouseover="$('#i-top').toggle();"
+              onmouseout="$('#i-top').toggle();"
+            ></i
+          ></a>
+        </li>
+        <li>
+          <a class="icon" aria-label="分享" href="#"
+            ><i
+              class="fa-solid fa-share-alt"
+              aria-hidden="true"
+              onmouseover="$('#i-share').toggle();"
+              onmouseout="$('#i-share').toggle();"
+              onclick="$('#share').toggle();return false;"
+            ></i
+          ></a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display: none"
+        >上一篇</span
+      >
+      <span id="i-next" class="info" style="display: none"
+        >下一篇</span
+      >
+      <span id="i-top" class="info" style="display: none"
+        >回到頁首</span
+      >
+      <span id="i-share" class="info" style="display: none"
+        >分享</span
+      >
+    </span>
+    <br />
+    <div id="share" style="display: none">
+      <ul>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://winnie0609.github.io/blog/2021/04/09/react-form/"
+      ><i class="fab fa-facebook " aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://twitter.com/share?url=https://winnie0609.github.io/blog/2021/04/09/react-form/&text=React 表單"
+      ><i class="fab fa-twitter " aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://winnie0609.github.io/blog/2021/04/09/react-form/&title=React 表單"
+      ><i class="fab fa-linkedin " aria-hidden="true"></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://winnie0609.github.io/blog/2021/04/09/react-form/&is_video=false&description=React 表單"
+      ><i class="fab fa-pinterest " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <li>
+    <a
+      class="icon"
+      href="mailto:?subject=React 表單&body=Check out this article: https://winnie0609.github.io/blog/2021/04/09/react-form/"
+      ><i
+        class="fa-solid fa-envelope "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://winnie0609.github.io/blog/2021/04/09/react-form/&title=React 表單"
+      ><i
+        class="fab fa-get-pocket "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://winnie0609.github.io/blog/2021/04/09/react-form/&title=React 表單"
+      ><i class="fab fa-reddit " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://winnie0609.github.io/blog/2021/04/09/react-form/&title=React 表單"
+      ><i
+        class="fab fa-stumbleupon "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://digg.com/submit?url=https://winnie0609.github.io/blog/2021/04/09/react-form/&title=React 表單"
+      ><i class="fab fa-digg " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://winnie0609.github.io/blog/2021/04/09/react-form/&name=React 表單&description="
+      ><i class="fab fa-tumblr " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://winnie0609.github.io/blog/2021/04/09/react-form/&t=React 表單"
+      ><i
+        class="fab fa-hacker-news "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+</ul>
+
+    </div>
+     
+    <div id="toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Controlled-Component"><span class="toc-number">1.</span> <span class="toc-text">Controlled-Component</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Text"><span class="toc-number">1.1.</span> <span class="toc-text">Text</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E7%A8%8B%E5%BC%8F%E7%A2%BC%EF%BC%9A"><span class="toc-number">1.1.1.</span> <span class="toc-text">完整程式碼：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TextArea"><span class="toc-number">1.2.</span> <span class="toc-text">TextArea</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Checkbox"><span class="toc-number">1.3.</span> <span class="toc-text">Checkbox</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Radio"><span class="toc-number">1.4.</span> <span class="toc-text">Radio</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Select"><span class="toc-number">1.5.</span> <span class="toc-text">Select</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AF%84%E4%BE%8B"><span class="toc-number">1.6.</span> <span class="toc-text">範例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E8%B5%B0"><span class="toc-number">1.6.1.</span> <span class="toc-text">不走</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%B5%90"><span class="toc-number">2.</span> <span class="toc-text">小結</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%83%E8%80%83%E8%B3%87%E6%96%99"><span class="toc-number">3.</span> <span class="toc-text">參考資料</span></a></li></ol></div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        React 表單
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Winnie</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-04-09T08:45:28.000Z" class="dt-published" itemprop="datePublished">2021-04-09</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/blog/tags/react/" rel="tag">react</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>此篇文章為看過 Scrimba 線上課程 （<a target="_blank" rel="noopener" href="https://scrimba.com/learn/frontend">The Frontend Developer Career Path</a>）之教學影片後的筆記整理，內容與例子大多出自該教學影片。</p>
+<h2 id="Controlled-Component"><a href="#Controlled-Component" class="headerlink" title="Controlled-Component"></a>Controlled-Component</h2><p>React 創建表單的方式有兩種：Controlled Component 以及 Uncontrolled Component。前者的表單的資料是被 React component 所處理；後者表單的資料則由 DOM 本身處理。多數情況下建議使用 controlled component.</p>
+<h3 id="Text"><a href="#Text" class="headerlink" title="Text"></a>Text</h3><p>在 React 中，可變的 state 通常是被維持在 component 中的 state property，並只能以 setState() 來更新。State 在用戶每次輸入的時候都會更新，如果將用戶輸入的資訊都印出來，字會隨著用戶輸入的一個一個字出現（結尾有示範影片）。</p>
+<ol>
+<li>建立 react component</li>
+<li>在 render()中設定需要的 input</li>
+<li>在 this.state 中初始化 firstName&#x2F;lastName 的值</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">APP</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Component</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">super</span>();</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">state</span> = &#123;</span><br><span class="line">      <span class="attr">firstName</span>: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">      <span class="attr">lastName</span>: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>設定 onChange 的 function(handleChange)<br>為了抓取用戶說輸入的資訊再更新 State，因此要在 input 中加入<code>onChange</code>，將其指向更新 function (這裡指向 handleChange function)。每次用戶輸入時，state 都會更新。與此同時綁定 function 以及 state. 在 handleChange function 中為 firstName &#x2F; lastName 重新賦值。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">this</span>.<span class="property">handleChange</span> = <span class="variable language_">this</span>.<span class="property">handleChange</span>.<span class="title function_">bind</span>(<span class="variable language_">this</span>);</span><br></pre></td></tr></table></figure>
+
+<p>為了避免重新賦值時有錯誤，因此要為 <code>input</code> 個別設定 <code>name</code>（在 input 中加入<code>name</code>）。在 <code>handleChange function</code> 中就可以直接指向 <code>input</code> 的 <code>name</code>. 無論是哪一種 input 都應該使用這樣的方式去更新資料。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">handleChange</span>(<span class="params">event</span>)&#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">      <span class="comment">//不直接寫firstName : event.target.value</span></span><br><span class="line">      [event.<span class="property">target</span>.<span class="property">name</span>] : event.<span class="property">target</span>.<span class="property">value</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li><strong>為 input 添加 value attribute</strong><br>讓 this.state 的 value 等於用戶的輸入。</li>
+</ol>
+<h4 id="完整程式碼："><a href="#完整程式碼：" class="headerlink" title="完整程式碼："></a>完整程式碼：</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span>, &#123; <span class="title class_">Component</span> &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">APP</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Component</span>&#123;</span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="variable language_">super</span>()</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">state</span> = &#123; <span class="comment">//初始化</span></span><br><span class="line">            firstName : <span class="string">&quot;&quot;</span>,</span><br><span class="line">            lastName : <span class="string">&quot;&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">handleChange</span> = <span class="variable language_">this</span>.<span class="property">handleChange</span>.<span class="title function_">bind</span>(<span class="variable language_">this</span>) <span class="comment">//綁定</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//可以簡化成這樣</span></span><br><span class="line">    <span class="title function_">handleChange</span>(<span class="params">event</span>)&#123;</span><br><span class="line">        <span class="keyword">const</span> &#123;name, value&#125; = event.<span class="property">target</span></span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">            \[name\] : value</span><br><span class="line">        &#125;</span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">render</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="keyword">return</span>(</span><br><span class="line">        <span class="language-xml"><span class="tag">&lt;<span class="name">form</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">label</span>&gt;</span>First Name <span class="tag">&lt;/<span class="name">label</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">input</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">type</span>=<span class="string">&quot;text&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">name</span>=<span class="string">&quot;firstName&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">value</span>=<span class="string">&#123;this.state.firstName&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">onChange</span>=<span class="string">&#123;this.handleChange&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            /&gt;</span></span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">br</span>/&gt;</span></span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">label</span>&gt;</span>Last Name <span class="tag">&lt;/<span class="name">label</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">input</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">type</span>=<span class="string">&quot;text&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">name</span>=<span class="string">&quot;lastName&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">value</span>=<span class="string">&#123;this.state.lastName&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">onChange</span>=<span class="string">&#123;this.handleChange&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            /&gt;</span></span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;this.state.firstName&#125;&#123;this.state.lastName&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span> //印出來</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span></span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="variable constant_">APP</span></span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://i.imgur.com/UdXegvs.gif"><img src="https://i.imgur.com/UdXegvs.gif"></a></p>
+<h3 id="TextArea"><a href="#TextArea" class="headerlink" title="TextArea"></a>TextArea</h3><p>跟原 HTML 的寫法有些不同，在 HTML 中，一個 textarea 的 element 是經由它的 children 來定義它的文字。React 中的則是使用 <code>value</code> attribute.</p>
+<h3 id="Checkbox"><a href="#Checkbox" class="headerlink" title="Checkbox"></a>Checkbox</h3><p>checkbox 中的 <code>checked</code> attribute 是 boolean，可在 this.state 中設定它的值。checkbox 可以讓用戶勾選&#x2F;不勾選，因此需要設定 <code>onChange</code> 讓 checked 變成可改變的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;input</span><br><span class="line">    type=<span class="string">&quot;checkbox&quot;</span></span><br><span class="line">    checked=&#123;boolean&#125;</span><br><span class="line">    onChange=&#123;<span class="keyword">function</span>&#125;</span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Radio"><a href="#Radio" class="headerlink" title="Radio"></a>Radio</h3><p>radio 跟 checkbox 的寫法很類似。同一組的 radio button 要設置相同的名字，這樣才會被認為是一組，才能從中擇一。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;label&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">input</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">type</span>=<span class="string">&quot;radio&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">name</span>=<span class="string">&quot;gender&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">value</span>=<span class="string">&quot;male&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">checked</span>=<span class="string">&#123;this.state.gender</span> === <span class="string">&quot;male&quot;</span>&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">onChange</span>=<span class="string">&#123;&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">  /&gt;</span></span> <span class="title class_">Male</span></span><br><span class="line">&lt;/label&gt;</span><br><span class="line"></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">label</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">input</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">type</span>=<span class="string">&quot;radio&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">name</span>=<span class="string">&quot;gender&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">value</span>=<span class="string">&quot;female&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">checked</span>=<span class="string">&#123;this.state.gender</span> === <span class="string">&quot;female&quot;</span>&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">onChange</span>=<span class="string">&#123;&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">  /&gt;</span> Female</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">label</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://i.imgur.com/MkiVZyR.png"><img src="https://i.imgur.com/MkiVZyR.png"></a></p>
+<h3 id="Select"><a href="#Select" class="headerlink" title="Select"></a>Select</h3><p>Select 的下拉式選單中，預設被選定的值與 HTML 中寫的不同，React 使用 <code>value</code> 這個 attribute 來選定預設的值，範例中預設被選定的是 ‘blue’ 。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;label&gt;<span class="title class_">Favorite</span> <span class="title class_">Color</span>: &lt;/label&gt;</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">select</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">value</span>=<span class="string">&#123;</span>&quot;<span class="attr">blue</span>&quot;&#125; //<span class="attr">預設值</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onChange</span>=<span class="string">&#123;this.handleChange&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">name</span>=<span class="string">&quot;favColor&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    &gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;blue&quot;</span>\&gt;</span>Blue<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;green&quot;</span>\&gt;</span>Green<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;red&quot;</span>\&gt;</span>Red<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;orange&quot;</span>\&gt;</span>Orange<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;yellow&quot;</span>\&gt;</span>Yellow<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://i.imgur.com/r0TFSLh.png"><img src="https://i.imgur.com/r0TFSLh.png"></a></p>
+<h3 id="範例"><a href="#範例" class="headerlink" title="範例"></a>範例</h3><p><a target="_blank" rel="noopener" href="https://coursework.vschool.io/travel-form/">Travel form</a></p>
+<p>實作一個簡單的 Travel form，使用了<code>text</code>, <code>textarea</code>, <code> checkbox</code>, <code>radio</code> 以及 <code>select</code>.</p>
+<p>表單內容包括：</p>
+<ul>
+<li>First Name&#x2F; Last Name : text</li>
+<li>Age : number</li>
+<li>Gender : radio</li>
+<li>Destination : select</li>
+<li>Dietary restrictions: checkbox</li>
+</ul>
+<h4 id="不走"><a href="#不走" class="headerlink" title="不走"></a>不走</h4><ol>
+<li>首先建立 react component 以及需要的 input。</li>
+<li>創建操縱每個 input 改變的 function + binding<ul>
+<li>為了讓 input 的值得以改變</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">handleChange</span>(<span class="params">event</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="title function_">state</span>(&#123;</span><br><span class="line">    xxx,</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>First Name&#x2F; Last Name&#x2F; Age : text<ul>
+<li>為了收到用戶的輸入以及及時改變 state，input 內需要 <code>onchange</code> 以及 <code>value</code> 兩個 attribute ( 其他 type 亦然 )</li>
+<li><code>onchange</code>: 當用戶輸入時，就會立刻執行指向的 function，立即更新 state</li>
+<li><code>value</code>: 會指向 function 更新完後的 value</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">handleChange</span>(<span class="params">event</span>)&#123;</span><br><span class="line">  <span class="keyword">const</span> &#123;name, value&#125; = event.<span class="property">target</span></span><br><span class="line">  <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">      \[name\] : value <span class="comment">//event.target.name選中的是input裡的&#x27;name&#x27;</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;input</span><br><span class="line">  type=<span class="string">&quot;text&quot;</span></span><br><span class="line">  name=<span class="string">&quot;firstName&quot;</span></span><br><span class="line">  placeholder=<span class="string">&quot;First Name&quot;</span></span><br><span class="line">  value=&#123;<span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">firstName</span>&#125;</span><br><span class="line">  onChange=&#123;<span class="variable language_">this</span>.<span class="property">handleChange</span>&#125;</span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>Gender : radio<ul>
+<li>input 內加上 <code>onchange</code>（ 指向 handleChange function ） &amp; <code>value</code></li>
+<li>跟 checkbox 的原理相似，擇一的功能需要依賴 <code>check</code></li>
+</ul>
+</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;input</span><br><span class="line">    type=<span class="string">&quot;radio&quot;</span></span><br><span class="line">    name=<span class="string">&quot;gender&quot;</span></span><br><span class="line">    value=<span class="string">&quot;female&quot;</span></span><br><span class="line">    <span class="comment">//當state是female時，就可以選到</span></span><br><span class="line">    checked=&#123;<span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">gender</span> === <span class="string">&quot;female&quot;</span>&#125;</span><br><span class="line">    onChange=&#123;<span class="variable language_">this</span>.<span class="property">handleChange</span>&#125;</span><br><span class="line">/&gt;<span class="title class_">Female</span></span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>Destination : select<ul>
+<li>input 內加上 <code>onchange</code>（ 指向 handleChange function ） &amp; <code>value</code></li>
+<li>選項默認會是第一個，但這個選項不會被取得，需要切換到第二個選項再切回來才會被選中</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;select</span><br><span class="line">  value=&#123;<span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">destination</span>&#125;</span><br><span class="line">  name=<span class="string">&quot;destination&quot;</span></span><br><span class="line">  onChange=&#123;<span class="variable language_">this</span>.<span class="property">handleChange</span>&#125;</span><br><span class="line">&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;&quot;</span>&gt;</span>---Please choose a planet---<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span></span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;🪐Tatooine&quot;</span>&gt;</span>🪐Tatooine<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span></span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;🌖Alderaan&quot;</span>&gt;</span>🌖Alderaan<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span></span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;☀️Hoth&quot;</span>&gt;</span>☀️Hoth<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span></span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;⭐Bespin&quot;</span>&gt;</span>⭐Bespin<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span></span><br><span class="line">&lt;/select&gt;</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>Dietary restrictions: checkbox<ul>
+<li>設定每一個初始值為 false</li>
+<li>使用<code>checked</code>來改變 function</li>
+<li>funtion 調整<ul>
+<li>這幾種 input 會分成兩種狀況：適用於 checkbox 的以及 checkbox 以外的。因為只分為兩種狀況，因此可以使用 if type 等於 checkbox 就執行冒號前的，不等於 checkbox 則執行冒號後的</li>
+</ul>
+</li>
+<li>結果顯示 Yes &#x2F; No</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//先設定每一個選項的 boolean</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">this</span>.<span class="property">state</span> = &#123;</span><br><span class="line">  <span class="attr">isFish</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">isBread</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">isMilk</span>: <span class="literal">false</span>,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//input 的 checked</span></span><br><span class="line"></span><br><span class="line">&lt;input</span><br><span class="line">  type=<span class="string">&quot;checkbox&quot;</span></span><br><span class="line">  name=<span class="string">&quot;isFish&quot;</span></span><br><span class="line">  checked=&#123;<span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">isFish</span>&#125;</span><br><span class="line">  onChange=&#123;<span class="variable language_">this</span>.<span class="property">handleChange</span>&#125;</span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//function 調整</span></span><br><span class="line"></span><br><span class="line"><span class="title function_">handleChange</span>(<span class="params">event</span>)&#123;</span><br><span class="line"> <span class="keyword">const</span> &#123;name, value, type, checked&#125; = event.<span class="property">target</span></span><br><span class="line"> type === <span class="string">&quot;checkbox&quot;</span> ?</span><br><span class="line">  <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">    [name] : checked <span class="comment">//checkbox 的情況</span></span><br><span class="line">  &#125;)</span><br><span class="line"> :</span><br><span class="line">  <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123; <span class="comment">//其他的的情況</span></span><br><span class="line">    [name] : value,</span><br><span class="line">  &#125;)</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//結果顯示</span></span><br><span class="line">&lt;p&gt;<span class="title class_">Colo</span> <span class="title class_">Claw</span> <span class="title class_">Fish</span> : &#123;<span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">isFish</span> ? <span class="string">&#x27;Yes&#x27;</span> : <span class="string">&#x27;No&#x27;</span>&#125;&lt;/p&gt;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://i.imgur.com/V880vEP.gif"><img src="https://i.imgur.com/V880vEP.gif" alt="React Form Demo"></a></p>
+<h2 id="小結"><a href="#小結" class="headerlink" title="小結"></a>小結</h2><p>直接刻表單程式碼會落落長的，所以可以分好 Component 讓程式碼比較好維護. 另外也有 <a target="_blank" rel="noopener" href="https://formik.org/">Formik</a> 這個工具，主打無痛創造 React 表單，但這個還沒仔細研究過。</p>
+<h2 id="參考資料"><a href="#參考資料" class="headerlink" title="參考資料"></a>參考資料</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://zh-hant.reactjs.org/docs/forms.html/">React Forms</a></li>
+<li><a target="_blank" rel="noopener" href="https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0">Presentational and Container Components</a></li>
+</ol>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/blog/">首頁</a></li>
+        
+          <li><a href="/blog/about/">關於</a></li>
+        
+          <li><a href="/blog/archives/">文章</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/winnie0609">專案</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Controlled-Component"><span class="toc-number">1.</span> <span class="toc-text">Controlled-Component</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Text"><span class="toc-number">1.1.</span> <span class="toc-text">Text</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E7%A8%8B%E5%BC%8F%E7%A2%BC%EF%BC%9A"><span class="toc-number">1.1.1.</span> <span class="toc-text">完整程式碼：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TextArea"><span class="toc-number">1.2.</span> <span class="toc-text">TextArea</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Checkbox"><span class="toc-number">1.3.</span> <span class="toc-text">Checkbox</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Radio"><span class="toc-number">1.4.</span> <span class="toc-text">Radio</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Select"><span class="toc-number">1.5.</span> <span class="toc-text">Select</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AF%84%E4%BE%8B"><span class="toc-number">1.6.</span> <span class="toc-text">範例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E8%B5%B0"><span class="toc-number">1.6.1.</span> <span class="toc-text">不走</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%B5%90"><span class="toc-number">2.</span> <span class="toc-text">小結</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%83%E8%80%83%E8%B3%87%E6%96%99"><span class="toc-number">3.</span> <span class="toc-text">參考資料</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://winnie0609.github.io/blog/2021/04/09/react-form/"
+      ><i class="fab fa-facebook fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://twitter.com/share?url=https://winnie0609.github.io/blog/2021/04/09/react-form/&text=React 表單"
+      ><i class="fab fa-twitter fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://winnie0609.github.io/blog/2021/04/09/react-form/&title=React 表單"
+      ><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://winnie0609.github.io/blog/2021/04/09/react-form/&is_video=false&description=React 表單"
+      ><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <li>
+    <a
+      class="icon"
+      href="mailto:?subject=React 表單&body=Check out this article: https://winnie0609.github.io/blog/2021/04/09/react-form/"
+      ><i
+        class="fa-solid fa-envelope fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://winnie0609.github.io/blog/2021/04/09/react-form/&title=React 表單"
+      ><i
+        class="fab fa-get-pocket fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://winnie0609.github.io/blog/2021/04/09/react-form/&title=React 表單"
+      ><i class="fab fa-reddit fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://winnie0609.github.io/blog/2021/04/09/react-form/&title=React 表單"
+      ><i
+        class="fab fa-stumbleupon fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://digg.com/submit?url=https://winnie0609.github.io/blog/2021/04/09/react-form/&title=React 表單"
+      ><i class="fab fa-digg fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://winnie0609.github.io/blog/2021/04/09/react-form/&name=React 表單&description="
+      ><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://winnie0609.github.io/blog/2021/04/09/react-form/&t=React 表單"
+      ><i
+        class="fab fa-hacker-news fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 選單</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 文章目錄</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 頁首</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    &copy;
+    
+    
+    2023
+    Winnie 
+    | Powered by <a href="hexo.io/">Hexo</a> & <a target="_blank" rel="noopener" href="https://github.com/probberechts/hexo-theme-cactus">Cactus</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/blog/">首頁</a></li><!--
+     --><!--
+       --><li><a href="/blog/about/">關於</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">文章</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/winnie0609">專案</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"複製\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "已複製！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
