@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="這是一個有基本功能的 todo list 練習，為了練習語法以及邏輯，所以參考了教學影片，文末附上教學影片之連結。這裡練習了各個 Component 之間的傳遞、React Hook 也認識了之前沒有用過的幾個 CSS 小方法。下面詳細記錄了自己的學習步驟。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React todo list 實作">
+<meta property="og:url" content="https://winnie0609.github.io/blog/2021/04/13/react-todo-list/index.html">
+<meta property="og:site_name" content="Winnie&#39;s blog">
+<meta property="og:description" content="這是一個有基本功能的 todo list 練習，為了練習語法以及邏輯，所以參考了教學影片，文末附上教學影片之連結。這裡練習了各個 Component 之間的傳遞、React Hook 也認識了之前沒有用過的幾個 CSS 小方法。下面詳細記錄了自己的學習步驟。">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://i.imgur.com/OlEqffn.png">
+<meta property="og:image" content="https://i.imgur.com/LB5JVnU.png">
+<meta property="og:image" content="https://i.imgur.com/krmEfcI.gif">
+<meta property="og:image" content="https://i.imgur.com/oqsvS3Z.gif">
+<meta property="og:image" content="https://i.imgur.com/oWvAJBw.gif">
+<meta property="og:image" content="https://i.imgur.com/UXdkcDu.png">
+<meta property="article:published_time" content="2021-04-13T13:37:00.000Z">
+<meta property="article:modified_time" content="2023-08-05T15:02:45.401Z">
+<meta property="article:author" content="Winnie">
+<meta property="article:tag" content="react">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/OlEqffn.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/blog/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>React todo list 實作</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"
+    ><i class="fa-solid fa-bars fa-lg"></i
+  ></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"
+    ><i class="fa-solid fa-bars fa-lg"></i
+  ></a>
+  <a
+    id="top-icon-tablet"
+    href="#"
+    aria-label="Top"
+    onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"
+    style="display: none"
+    ><i class="fa-solid fa-chevron-up fa-lg"></i
+  ></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       -->
+        <li>
+          <a href="/blog/"
+            >首頁</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a href="/blog/about/"
+            >關於</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a href="/blog/archives/"
+            >文章</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a target="_blank" rel="noopener" href="http://github.com/winnie0609"
+            >專案</a
+          >
+        </li>
+        <!--
+     -->
+      </ul>
+    </span>
+    <br />
+    <span id="actions">
+      <ul>
+        
+        <li>
+          <a
+            class="icon"
+            aria-label="上一篇"
+            href="/blog/2021/04/15/react-meme-generator/"
+            ><i
+              class="fa-solid fa-chevron-left"
+              aria-hidden="true"
+              onmouseover="$('#i-prev').toggle();"
+              onmouseout="$('#i-prev').toggle();"
+            ></i
+          ></a>
+        </li>
+         
+        <li>
+          <a
+            class="icon"
+            aria-label="下一篇"
+            href="/blog/2021/04/10/react-use-state/"
+            ><i
+              class="fa-solid fa-chevron-right"
+              aria-hidden="true"
+              onmouseover="$('#i-next').toggle();"
+              onmouseout="$('#i-next').toggle();"
+            ></i
+          ></a>
+        </li>
+        
+        <li>
+          <a
+            class="icon"
+            aria-label="回到頁首"
+            href="#"
+            onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"
+            ><i
+              class="fa-solid fa-chevron-up"
+              aria-hidden="true"
+              onmouseover="$('#i-top').toggle();"
+              onmouseout="$('#i-top').toggle();"
+            ></i
+          ></a>
+        </li>
+        <li>
+          <a class="icon" aria-label="分享" href="#"
+            ><i
+              class="fa-solid fa-share-alt"
+              aria-hidden="true"
+              onmouseover="$('#i-share').toggle();"
+              onmouseout="$('#i-share').toggle();"
+              onclick="$('#share').toggle();return false;"
+            ></i
+          ></a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display: none"
+        >上一篇</span
+      >
+      <span id="i-next" class="info" style="display: none"
+        >下一篇</span
+      >
+      <span id="i-top" class="info" style="display: none"
+        >回到頁首</span
+      >
+      <span id="i-share" class="info" style="display: none"
+        >分享</span
+      >
+    </span>
+    <br />
+    <div id="share" style="display: none">
+      <ul>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://winnie0609.github.io/blog/2021/04/13/react-todo-list/"
+      ><i class="fab fa-facebook " aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://twitter.com/share?url=https://winnie0609.github.io/blog/2021/04/13/react-todo-list/&text=React todo list 實作"
+      ><i class="fab fa-twitter " aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://winnie0609.github.io/blog/2021/04/13/react-todo-list/&title=React todo list 實作"
+      ><i class="fab fa-linkedin " aria-hidden="true"></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://winnie0609.github.io/blog/2021/04/13/react-todo-list/&is_video=false&description=React todo list 實作"
+      ><i class="fab fa-pinterest " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <li>
+    <a
+      class="icon"
+      href="mailto:?subject=React todo list 實作&body=Check out this article: https://winnie0609.github.io/blog/2021/04/13/react-todo-list/"
+      ><i
+        class="fa-solid fa-envelope "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://winnie0609.github.io/blog/2021/04/13/react-todo-list/&title=React todo list 實作"
+      ><i
+        class="fab fa-get-pocket "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://winnie0609.github.io/blog/2021/04/13/react-todo-list/&title=React todo list 實作"
+      ><i class="fab fa-reddit " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://winnie0609.github.io/blog/2021/04/13/react-todo-list/&title=React todo list 實作"
+      ><i
+        class="fab fa-stumbleupon "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://digg.com/submit?url=https://winnie0609.github.io/blog/2021/04/13/react-todo-list/&title=React todo list 實作"
+      ><i class="fab fa-digg " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://winnie0609.github.io/blog/2021/04/13/react-todo-list/&name=React todo list 實作&description="
+      ><i class="fab fa-tumblr " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://winnie0609.github.io/blog/2021/04/13/react-todo-list/&t=React todo list 實作"
+      ><i
+        class="fab fa-hacker-news "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+</ul>
+
+    </div>
+     
+    <div id="toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B0%A1%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">簡介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">2.</span> <span class="toc-text">功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E4%BD%9C%E6%A5%AD"><span class="toc-number">3.</span> <span class="toc-text">前置作業</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A5%E9%A9%9F"><span class="toc-number">4.</span> <span class="toc-text">步驟</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%A8%AD%E7%BD%AE"><span class="toc-number">4.1.</span> <span class="toc-text">基本設置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%99%95%E7%90%86%E7%94%A8%E6%88%B6%E8%BC%B8%E5%85%A5%E7%9A%84-input"><span class="toc-number">4.2.</span> <span class="toc-text">處理用戶輸入的 input</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%8A%E7%94%A8%E6%88%B6%E8%BC%B8%E5%85%A5%E7%9A%84%E6%9D%B1%E8%A5%BF%E5%AD%98%E9%80%B2-todo-list-%E8%A3%A1"><span class="toc-number">4.3.</span> <span class="toc-text">把用戶輸入的東西存進 todo list 裡</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%8A%E8%BC%B8%E5%85%A5%E7%9A%84-tasks-%E6%9B%B4%E6%96%B0%E5%BE%8C%E7%9A%84-state-%E6%B8%B2%E6%9F%93%E5%88%B0%E7%80%8F%E8%A6%BD%E5%99%A8%E4%B8%8A%E6%8A%8A%E8%BC%B8%E5%85%A5%E7%9A%84-tasks-%E6%9B%B4%E6%96%B0%E5%BE%8C%E7%9A%84-state-%E6%B8%B2%E6%9F%93%E5%88%B0%E7%80%8F%E8%A6%BD%E5%99%A8%E4%B8%8A"><span class="toc-number">4.4.</span> <span class="toc-text">把輸入的 tasks ( 更新後的 state ) 渲染到瀏覽器上把輸入的 tasks ( 更新後的 state ) 渲染到瀏覽器上</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A2%9E%E5%8A%A0%E5%88%AA%E9%99%A4%E5%8A%9F%E8%83%BD"><span class="toc-number">4.5.</span> <span class="toc-text">增加刪除功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A2%9E%E5%8A%A0-task-completed-%E5%8A%9F%E8%83%BD"><span class="toc-number">4.6.</span> <span class="toc-text">增加 task completed 功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A3%BD%E4%BD%9C-filter-%E5%8A%9F%E8%83%BD-All-Complete-Uncomplete-%E2%80%9D-%E8%A3%BD%E4%BD%9C-filter-%E5%8A%9F%E8%83%BD-All-Complete-Uncomplete"><span class="toc-number">4.7.</span> <span class="toc-text">製作 filter 功能 (All &#x2F; Complete &#x2F; Uncomplete)” 製作 filter 功能 (All &#x2F; Complete &#x2F; Uncomplete)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%B5%90"><span class="toc-number">5.</span> <span class="toc-text">小結</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%83%E8%80%83%E8%B3%87%E6%96%99"><span class="toc-number">6.</span> <span class="toc-text">參考資料</span></a></li></ol></div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        React todo list 實作
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Winnie</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-04-13T13:37:00.000Z" class="dt-published" itemprop="datePublished">2021-04-13</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/blog/tags/react/" rel="tag">react</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p><a href="https://winnie0609.github.io/todo-app/">Live Demo</a><br><a target="_blank" rel="noopener" href="https://github.com/Winnie0609/todo-app">Github</a><br><a target="_blank" rel="noopener" href="https://i.imgur.com/eYla12e.gif">Todo List App Demo</a></p>
+<h2 id="簡介"><a href="#簡介" class="headerlink" title="簡介"></a>簡介</h2><p>這是一個有基本功能的 todo list 練習，為了練習語法以及邏輯，所以參考了教學影片，文末附上教學影片之連結。這裡練習了各個 Component 之間的傳遞、React Hook 也認識了之前沒有用過的幾個 CSS 小方法。下面詳細記錄了自己的學習步驟。</p>
+<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><ul>
+<li>增加 task</li>
+<li>刪除 task</li>
+<li>完成的 task : 打 √, 劃掉的線</li>
+<li>可以 filter 完成&#x2F;未完成&#x2F;所有的 task</li>
+</ul>
+<h2 id="前置作業"><a href="#前置作業" class="headerlink" title="前置作業"></a>前置作業</h2><p>簡單劃分需要的功能以及元件。除了 index.js 外，主要的操作都在 App.js.其餘的 Component 集中放<br>到 components 的 file 中。</p>
+<ul>
+<li>index.js</li>
+<li>App.js</li>
+<li>Form.js</li>
+<li>TodoList.js</li>
+<li>Todo.js</li>
+</ul>
+<h2 id="步驟"><a href="#步驟" class="headerlink" title="步驟"></a>步驟</h2><h3 id="基本設置"><a href="#基本設置" class="headerlink" title="基本設置"></a>基本設置</h3><p>整個 Todo list 是由兩個部分組成的：form 以及 list。</p>
+<ul>
+<li>form : 設置讓用戶輸入的 form , 包含輸入的框框 (input) &amp; 添加按鈕 (button) &amp; filter (select) 。Filter 裡有三個 option : All&#x2F; completed &#x2F; uncompleted。</li>
+<li>list : 用戶在增加 task 之後，該 task 會出現在 list 裡。只要設置一個 unorder list，增加的部分之後會處理。</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">React</span> <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">ReactDOM</span> <span class="keyword">from</span> <span class="string">&#x27;react-dom&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;./index.css&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">App</span> <span class="keyword">from</span> <span class="string">&#x27;./App&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title class_">ReactDOM</span>.<span class="title function_">render</span>(</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">App</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>,</span><br><span class="line">  <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;root&#x27;</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Form.js</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">React</span> <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;../index.css&#x27;</span>; <span class="comment">//引入外部css</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">Form</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">form</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;input-option&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">select</span> <span class="attr">dir</span>=<span class="string">&quot;rtl&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">option</span> <span class="attr">class</span>=<span class="string">&quot;options&quot;</span> <span class="attr">value</span>=<span class="string">&quot;all&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            All</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">option</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">option</span> <span class="attr">class</span>=<span class="string">&quot;options&quot;</span> <span class="attr">value</span>=<span class="string">&quot;completed&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            Completed</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">option</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">option</span> <span class="attr">class</span>=<span class="string">&quot;options&quot;</span> <span class="attr">value</span>=<span class="string">&quot;uncompleted&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            Uncompleted&#123;&#x27; &#x27;&#125;</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">option</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;input-text&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">className</span>=<span class="string">&quot;text&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">placeholder</span>=<span class="string">&quot;Add a task...&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fas fa-times add&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">Form</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Form.js</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">React</span> <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;../index.css&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">TodoList</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;todo-container&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">ul</span> <span class="attr">className</span>=<span class="string">&quot;todo-list&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">TodoList</span>;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://i.imgur.com/OlEqffn.png"><img src="https://i.imgur.com/OlEqffn.png"></a></p>
+<h3 id="處理用戶輸入的-input"><a href="#處理用戶輸入的-input" class="headerlink" title="處理用戶輸入的 input"></a>處理用戶輸入的 input</h3><p>在 App.js 使用 useState 設定 value 的初始值。因為需要處理的 input 在 Form.js 中，因此要把這兩個參數往下傳，之後才能在 Form.js 中引入。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// App.js</span></span><br><span class="line"><span class="keyword">const</span> [inputText, setInputText] = <span class="title function_">useState</span>(<span class="string">&quot;&quot;</span>) <span class="comment">//初始值為空字串</span></span><br><span class="line">&lt;<span class="title class_">Form</span> inputText=&#123;inputText&#125; setInputText=&#123;setInputText&#125;/&gt;</span><br></pre></td></tr></table></figure>
+
+<p>接著處理用戶輸入的資訊。在 input 中設定 <code>onchange</code> 以及 <code>value</code>. input 改變時，<code>onChange</code> 會被觸發，因而執行設定好的 function.</p>
+<p>創造一個處理更新的 function : handlechange.使用 setTnputText 更新 input 的 <code>value</code>.用戶每輸入一個字，就會觸發 <code>onchange</code>, 所以會出現下面的結果。</p>
+<p><code>const Form = (&#123; setInputText &#125;)</code> 相等於 <code>const Form = (&#123;props&#125;)</code> 的寫法，前者是直接把 setInput 這個參數傳進來，所以在使用 setInputText 的時候不用加上 props. 後者在使用時要寫 <code>props.setInputText</code> ，直接把參數傳進來的寫法會比較簡潔。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Form.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">Form</span> = (<span class="params">&#123; inputText, setInputText &#125;</span>) =&gt; &#123;</span><br><span class="line">  <span class="comment">//這是App.js中傳進來的參數</span></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">handlechange</span>(<span class="params">event</span>) &#123;</span><br><span class="line">    <span class="title function_">setInputText</span>(event.<span class="property">target</span>.<span class="property">value</span>); <span class="comment">//更新inputText的值</span></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(event.<span class="property">target</span>.<span class="property">value</span>); <span class="comment">//下面有log出來的效果</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  &lt;input</span><br><span class="line">    className=<span class="string">&quot;text&quot;</span></span><br><span class="line">    type=<span class="string">&quot;text&quot;</span></span><br><span class="line">    placeholder=<span class="string">&quot;Add a task...&quot;</span></span><br><span class="line">    value=&#123;inputText&#125;</span><br><span class="line">    onChange=&#123;handlechange&#125;</span><br><span class="line">  /&gt;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>結果會是這個樣子：<br><a target="_blank" rel="noopener" href="https://i.imgur.com/LB5JVnU.png"><img src="https://i.imgur.com/LB5JVnU.png"></a></p>
+<h3 id="把用戶輸入的東西存進-todo-list-裡"><a href="#把用戶輸入的東西存進-todo-list-裡" class="headerlink" title="把用戶輸入的東西存進 todo list 裡"></a>把用戶輸入的東西存進 todo list 裡</h3><p>運作邏輯：用戶輸入 task &gt; 按 summit button &gt; task 被加到 list 裡</p>
+<p>增加 button <code>onclick</code> function. 在按下 button 之後，用戶輸入的值加到 todo list 裡，可以創造一個新的 hook 將 todo list 存進 array 裡。因此創造了<code>const [todos, setTodos] = useState([])</code>，初始值為空 array.與 input 一樣，這個功能會在 Form.js 裡完成，因此也要將參數往下傳。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [todos, setTodos] = <span class="title function_">useState</span>([])</span><br><span class="line"></span><br><span class="line">&lt;<span class="title class_">Form</span></span><br><span class="line">    inputText=&#123;inputText&#125;</span><br><span class="line">    setInputText=&#123;setInputText&#125;</span><br><span class="line">    todos=&#123;todos&#125;</span><br><span class="line">    setTodos=&#123;setTodos&#125;</span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
+
+<p>接著處理用戶輸入的資料。在把 todos, setTodos 傳進 Form.js 後，增加 button 的 <code>onclick</code>，觸發 function 設為 submitHandleChange function. 這個 function 會更新 todos 這個 state，首先將原本就存在在 task 存進來，再增加用戶新輸入的 task. 用戶輸入的 task 會以 object 的形式傳進去，包括了 tasks 的名字 (text) 、是否完成 (completed:boolean)、id (使用亂數產生)。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Form.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">submitHandleChange</span>(<span class="params">e</span>) &#123;</span><br><span class="line">  e.<span class="title function_">preventDefault</span>(); <span class="comment">//移除默認 refresh 頁面</span></span><br><span class="line">  <span class="title function_">setTodos</span>([</span><br><span class="line">    ...todos,</span><br><span class="line">    &#123; <span class="attr">text</span>: inputText, <span class="attr">completed</span>: <span class="literal">false</span>, <span class="attr">id</span>: <span class="title class_">Math</span>.<span class="title function_">floor</span>(<span class="title class_">Math</span>.<span class="title function_">random</span>() * <span class="number">100</span>) &#125;,</span><br><span class="line">  ]);</span><br><span class="line">  <span class="title function_">setInputText</span>(<span class="string">&#x27;&#x27;</span>); <span class="comment">//輸入完成後，框框上的字拿掉</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以使用 react debugger 來看 todos 這個 state 的變化。在輸入 task 後按下 submit button, state 就會立刻更新。<br><a target="_blank" rel="noopener" href="https://i.imgur.com/krmEfcI.gif"><img src="https://i.imgur.com/krmEfcI.gif"></a></p>
+<h3 id="把輸入的-tasks-更新後的-state-渲染到瀏覽器上把輸入的-tasks-更新後的-state-渲染到瀏覽器上"><a href="#把輸入的-tasks-更新後的-state-渲染到瀏覽器上把輸入的-tasks-更新後的-state-渲染到瀏覽器上" class="headerlink" title="把輸入的 tasks ( 更新後的 state ) 渲染到瀏覽器上把輸入的 tasks ( 更新後的 state ) 渲染到瀏覽器上"></a>把輸入的 tasks ( 更新後的 state ) 渲染到瀏覽器上把輸入的 tasks ( 更新後的 state ) 渲染到瀏覽器上</h3><p>用戶輸入的 tasks 要加到 todo list 裡，這個部分要在 TodoList.js 進行。在 App.js 中把 todos 這個參數往下傳。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//App.js</span></span><br><span class="line">&lt;<span class="title class_">TodoList</span> todos=&#123;todos&#125; /&gt;</span><br></pre></td></tr></table></figure>
+
+<p>在 TodoList.js 裡，todos state 每一次更新，都要把資料往下傳到 todo.js 裡渲染。因此這裡使用 map() 遍歷 todos 裡的每一個 element ，除了輸入的 task 外，也要加上 key ，才不會報錯。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//TodoList.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">TodoList</span> = (<span class="params">&#123; todos &#125;</span>) =&gt; &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(todos);</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;todo-container&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">ul</span> <span class="attr">className</span>=<span class="string">&quot;todo-list&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;todos.map((todo) =&gt; (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">Todo</span> <span class="attr">key</span>=<span class="string">&#123;todo.id&#125;</span> <span class="attr">text</span>=<span class="string">&#123;todo.text&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">        ))&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>資料往下傳到 Todo.js 後，就會按照設定好的樣式傳染到瀏覽器上。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Todo.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Todo</span>(<span class="params">&#123;text&#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span>(</span><br><span class="line">    &lt;div className=&quot;todo&quot;&gt;</span><br><span class="line">      &lt;button className=&quot;check-btn&quot;&gt;&lt;i className=&quot;fas fa-check fa-xs&quot;&gt;&lt;i&gt;&lt;/button&gt;</span><br><span class="line">      &lt;li className=&quot;todo-item&quot;&gt;&#123;text&#125;&lt;/li&gt;</span><br><span class="line">      &lt;button className=&quot;trash-btn fa-xs&quot;&gt;&lt;i className=&quot;fas fa-times&quot;&gt;&lt;i&gt;&lt;/button&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="增加刪除功能"><a href="#增加刪除功能" class="headerlink" title="增加刪除功能"></a>增加刪除功能</h3><p>有關 task 本 task 的處理，都在 Todo.js 裡處理。刪除功能是直接操作 todos state, 因此會調用到 todos 以及 setTodos. 這兩個參數要從要從最頂層的 App.js 往下傳到 TodoList.js ，然後再往下傳到 Todo.js 中.</p>
+<p>創造新的 function , 使用 filter()來過濾掉不符合條件的 element. 這裡的條件設定為：todos state 中的 element 與 被點擊的 element 之 id 如果不相同就會被留下，相同就表示那是是用戶要刪掉的 element，因為不符合條件所以就被過濾掉了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Todo.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">deleteHandleChange</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title function_">setTodos</span>(todos.<span class="title function_">filter</span>(<span class="function">(<span class="params">el</span>) =&gt;</span> el.<span class="property">id</span> !== todo.<span class="property">id</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://i.imgur.com/oqsvS3Z.gif"><img src="https://i.imgur.com/oqsvS3Z.gif"></a></p>
+<h3 id="增加-task-completed-功能"><a href="#增加-task-completed-功能" class="headerlink" title="增加 task completed 功能"></a>增加 task completed 功能</h3><p>創造新的 function , 使用 map() 遍歷 todos state, 如果 element id 等於被點擊的 item 的 id，就將該 element 的 completed 的 boolean 改成相反的。最後再返回該 item.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Todo.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">CompleteHandleChange</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title function_">setTodos</span>(</span><br><span class="line">    todos.<span class="title function_">map</span>(<span class="function">(<span class="params">item</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (item.<span class="property">id</span> === todo.<span class="property">id</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">          ...item,</span><br><span class="line">          <span class="attr">completed</span>: !item.<span class="property">completed</span>,</span><br><span class="line">        &#125;;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> item;</span><br><span class="line">    &#125;)</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接著處理 UI 的部分，完成後會顯示打打勾、一槓、灰色字。可以用 todo.complete 來判斷是否要加入某個 className.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Todo.js</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//打勾勾</span></span><br><span class="line"><span class="comment">//todo.complete 為false時，打勾設定與背景同顏色</span></span><br><span class="line"><span class="comment">//todo.complete 為true時，加入&quot;completed-checkbox&quot;，打勾更改為黑色</span></span><br><span class="line"></span><br><span class="line">&lt; i className=&#123;<span class="string">`fas fa-check fa-xs <span class="subst">$&#123;todo.completed? <span class="string">&quot;completed-checkbox&quot;</span> : <span class="string">&quot;&quot;</span>&#125;</span>`</span>&#125;&gt;&lt;/i&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">//CSS</span></span><br><span class="line"><span class="comment">//背景為灰色，打勾也是灰色</span></span><br><span class="line">.<span class="property">check</span>-btn&#123;</span><br><span class="line">    <span class="attr">display</span>: block;</span><br><span class="line">    font-<span class="attr">weight</span>: <span class="number">100</span>;</span><br><span class="line">    <span class="attr">padding</span>: .1em .25em;</span><br><span class="line">    margin-<span class="attr">left</span>: 1em;</span><br><span class="line">    <span class="attr">border</span>: none;</span><br><span class="line">    border-<span class="attr">radius</span>: 7px;</span><br><span class="line">    background-<span class="attr">color</span>: #<span class="variable constant_">DFDFDF</span>;</span><br><span class="line">    <span class="attr">color</span>: #<span class="variable constant_">DFDFDF</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//完成後，打勾顏色更改為黑色</span></span><br><span class="line">.<span class="property">completed</span>-checkbox&#123;</span><br><span class="line">    <span class="attr">color</span>:black</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Todo.js</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//一槓、灰色字</span></span><br><span class="line">&lt;li className=&#123;<span class="string">`todo-item <span class="subst">$&#123;todo.completed? <span class="string">&quot;completed &quot;</span> : <span class="string">&quot;&quot;</span>&#125;</span>`</span>&#125;&gt;&#123;text&#125;&lt;/li&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">//CSS</span></span><br><span class="line">.<span class="property">completed</span> &#123;</span><br><span class="line">  text-<span class="attr">decoration</span>: line-through;</span><br><span class="line">  <span class="attr">opacity</span>: <span class="number">0.5</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://i.imgur.com/oWvAJBw.gif"><img src="https://i.imgur.com/oWvAJBw.gif"></a></p>
+<h3 id="製作-filter-功能-All-Complete-Uncomplete-”-製作-filter-功能-All-Complete-Uncomplete"><a href="#製作-filter-功能-All-Complete-Uncomplete-”-製作-filter-功能-All-Complete-Uncomplete" class="headerlink" title="製作 filter 功能 (All &#x2F; Complete &#x2F; Uncomplete)” 製作 filter 功能 (All &#x2F; Complete &#x2F; Uncomplete)"></a>製作 filter 功能 (All &#x2F; Complete &#x2F; Uncomplete)” 製作 filter 功能 (All &#x2F; Complete &#x2F; Uncomplete)</h3><p>先創造一個 status state 來儲存點擊 option 後的結果。這個 state 會在 Form 中處理，因此要把參數往下傳。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//App.js</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//把setStatus往下傳，會在 form.js 處理</span></span><br><span class="line"><span class="keyword">const</span> [status, setStatus] = <span class="title function_">useState</span>(<span class="string">&quot;all&quot;</span>) <span class="comment">//默認為all</span></span><br><span class="line"></span><br><span class="line">&lt;<span class="title class_">Form</span></span><br><span class="line">  todos=&#123;todos&#125;</span><br><span class="line">  setTodos=&#123;setTodos&#125;</span><br><span class="line">  inputText=&#123;inputText&#125;</span><br><span class="line">  setInputText=&#123;setInputText&#125;</span><br><span class="line">  setStatus=&#123;setStatus&#125;</span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
+
+<p>因為選單在 Form.js 裡，因此在 Form.js 處理。設定選單改變時要執行的 function : 更新 setStatus 成點選的選項。選擇 complete 的話，這裡 setStatus 就會更新為 completed.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Form.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">statusHandleChange</span>(<span class="params">event</span>) &#123;</span><br><span class="line">  <span class="title function_">setStatus</span>(event.<span class="property">target</span>.<span class="property">value</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://i.imgur.com/UXdkcDu.png"><img src="https://i.imgur.com/UXdkcDu.png"></a></p>
+<p>再創造一個 filtered state 來儲存被加進來的 task。創造一個新的 state 是為了不要影響到原本用來儲存 tasks 的 todos state. 過濾後的 tasks 會被儲存在這個 state.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//App.js</span></span><br><span class="line"><span class="comment">//會在 Todolist.js 中處理</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> [filteredTodo, setFilteredTodo] = <span class="title function_">useState</span>([])</span><br><span class="line"></span><br><span class="line">&lt;<span class="title class_">TodoList</span></span><br><span class="line">  setTodos=&#123;setTodos&#125;</span><br><span class="line">  todos=&#123;todos&#125;</span><br><span class="line">  setFilteredTodo=&#123;setFilteredTodo&#125;</span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
+
+<p>接著設定 filter 的條件，這裡使用 switch() 來處理 All&#x2F;completed&#x2F;uncompleted 的情況。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//App.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">filterHandlerChange</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">switch</span> (</span><br><span class="line">    status <span class="comment">//這個status的值是 : 點擊 option 後更新的值</span></span><br><span class="line">  ) &#123;</span><br><span class="line">    <span class="comment">//在 &lt;option value=&quot;completed&quot; 的狀況下&gt;</span></span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;completed&#x27;</span>: <span class="comment">//如果是 complete 就過濾出 completed 為 true 的 tasks</span></span><br><span class="line">      <span class="title function_">setFilteredTodos</span>(todos.<span class="title function_">filter</span>(<span class="function">(<span class="params">todo</span>) =&gt;</span> todo.<span class="property">completed</span> === <span class="literal">true</span>));</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;uncompleted&#x27;</span>:</span><br><span class="line">      <span class="title function_">setFilteredTodos</span>(todos.<span class="title function_">filter</span>(<span class="function">(<span class="params">todo</span>) =&gt;</span> todo.<span class="property">completed</span> === <span class="literal">false</span>));</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">    <span class="attr">default</span>:</span><br><span class="line">      <span class="title function_">setFilteredTodos</span>(todos);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>FilteredTodos 會在 tasks 存進 todos state 以及 option 被選擇的時候更新。使用 useEffect 來設定當上述兩種情況發生時，FilteredTodos 執行 function filterHandlerChange。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//App.js</span></span><br><span class="line"></span><br><span class="line"><span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">filterHandlerChange</span>();</span><br><span class="line">&#125;, [todos, status]);</span><br></pre></td></tr></table></figure>
+
+<h2 id="小結"><a href="#小結" class="headerlink" title="小結"></a>小結</h2><p>到這裡，基本的增、刪、過濾功能就已經完成了。當中遇到無法成功渲染的多數原因為，沒有將參數往下傳到各個 Component 中，在這次的練習中深刻體現要了解自己寫的每一行程式碼的意思，出錯了才有辦法找到 bug 在哪裡。經過這次練習，對拆分的 component 間要如何傳遞以及 React 的寫法都比較熟悉了一些。</p>
+<h2 id="參考資料"><a href="#參考資料" class="headerlink" title="參考資料"></a>參考資料</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=pCA4qpQDZD8&ab_channel=DevEd">Build A Todo App With REACT | React Project For Beginners (FULL).</a></li>
+</ol>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/blog/">首頁</a></li>
+        
+          <li><a href="/blog/about/">關於</a></li>
+        
+          <li><a href="/blog/archives/">文章</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/winnie0609">專案</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B0%A1%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">簡介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">2.</span> <span class="toc-text">功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E4%BD%9C%E6%A5%AD"><span class="toc-number">3.</span> <span class="toc-text">前置作業</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A5%E9%A9%9F"><span class="toc-number">4.</span> <span class="toc-text">步驟</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%A8%AD%E7%BD%AE"><span class="toc-number">4.1.</span> <span class="toc-text">基本設置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%99%95%E7%90%86%E7%94%A8%E6%88%B6%E8%BC%B8%E5%85%A5%E7%9A%84-input"><span class="toc-number">4.2.</span> <span class="toc-text">處理用戶輸入的 input</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%8A%E7%94%A8%E6%88%B6%E8%BC%B8%E5%85%A5%E7%9A%84%E6%9D%B1%E8%A5%BF%E5%AD%98%E9%80%B2-todo-list-%E8%A3%A1"><span class="toc-number">4.3.</span> <span class="toc-text">把用戶輸入的東西存進 todo list 裡</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%8A%E8%BC%B8%E5%85%A5%E7%9A%84-tasks-%E6%9B%B4%E6%96%B0%E5%BE%8C%E7%9A%84-state-%E6%B8%B2%E6%9F%93%E5%88%B0%E7%80%8F%E8%A6%BD%E5%99%A8%E4%B8%8A%E6%8A%8A%E8%BC%B8%E5%85%A5%E7%9A%84-tasks-%E6%9B%B4%E6%96%B0%E5%BE%8C%E7%9A%84-state-%E6%B8%B2%E6%9F%93%E5%88%B0%E7%80%8F%E8%A6%BD%E5%99%A8%E4%B8%8A"><span class="toc-number">4.4.</span> <span class="toc-text">把輸入的 tasks ( 更新後的 state ) 渲染到瀏覽器上把輸入的 tasks ( 更新後的 state ) 渲染到瀏覽器上</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A2%9E%E5%8A%A0%E5%88%AA%E9%99%A4%E5%8A%9F%E8%83%BD"><span class="toc-number">4.5.</span> <span class="toc-text">增加刪除功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A2%9E%E5%8A%A0-task-completed-%E5%8A%9F%E8%83%BD"><span class="toc-number">4.6.</span> <span class="toc-text">增加 task completed 功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A3%BD%E4%BD%9C-filter-%E5%8A%9F%E8%83%BD-All-Complete-Uncomplete-%E2%80%9D-%E8%A3%BD%E4%BD%9C-filter-%E5%8A%9F%E8%83%BD-All-Complete-Uncomplete"><span class="toc-number">4.7.</span> <span class="toc-text">製作 filter 功能 (All &#x2F; Complete &#x2F; Uncomplete)” 製作 filter 功能 (All &#x2F; Complete &#x2F; Uncomplete)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%B5%90"><span class="toc-number">5.</span> <span class="toc-text">小結</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%83%E8%80%83%E8%B3%87%E6%96%99"><span class="toc-number">6.</span> <span class="toc-text">參考資料</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://winnie0609.github.io/blog/2021/04/13/react-todo-list/"
+      ><i class="fab fa-facebook fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://twitter.com/share?url=https://winnie0609.github.io/blog/2021/04/13/react-todo-list/&text=React todo list 實作"
+      ><i class="fab fa-twitter fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://winnie0609.github.io/blog/2021/04/13/react-todo-list/&title=React todo list 實作"
+      ><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://winnie0609.github.io/blog/2021/04/13/react-todo-list/&is_video=false&description=React todo list 實作"
+      ><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <li>
+    <a
+      class="icon"
+      href="mailto:?subject=React todo list 實作&body=Check out this article: https://winnie0609.github.io/blog/2021/04/13/react-todo-list/"
+      ><i
+        class="fa-solid fa-envelope fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://winnie0609.github.io/blog/2021/04/13/react-todo-list/&title=React todo list 實作"
+      ><i
+        class="fab fa-get-pocket fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://winnie0609.github.io/blog/2021/04/13/react-todo-list/&title=React todo list 實作"
+      ><i class="fab fa-reddit fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://winnie0609.github.io/blog/2021/04/13/react-todo-list/&title=React todo list 實作"
+      ><i
+        class="fab fa-stumbleupon fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://digg.com/submit?url=https://winnie0609.github.io/blog/2021/04/13/react-todo-list/&title=React todo list 實作"
+      ><i class="fab fa-digg fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://winnie0609.github.io/blog/2021/04/13/react-todo-list/&name=React todo list 實作&description="
+      ><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://winnie0609.github.io/blog/2021/04/13/react-todo-list/&t=React todo list 實作"
+      ><i
+        class="fab fa-hacker-news fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 選單</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 文章目錄</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 頁首</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    &copy;
+    
+    
+    2023
+    Winnie 
+    | Powered by <a href="hexo.io/">Hexo</a> & <a target="_blank" rel="noopener" href="https://github.com/probberechts/hexo-theme-cactus">Cactus</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/blog/">首頁</a></li><!--
+     --><!--
+       --><li><a href="/blog/about/">關於</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">文章</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/winnie0609">專案</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"複製\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "已複製！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Meme Generator 提供用戶製作迷因圖。使用串接 API 的方式將迷因圖呈現在畫面上，輸入文字後便可以下載該迷因圖。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React Meme Generator 實作">
+<meta property="og:url" content="https://winnie0609.github.io/blog/2021/04/15/react-meme-generator/index.html">
+<meta property="og:site_name" content="Winnie&#39;s blog">
+<meta property="og:description" content="Meme Generator 提供用戶製作迷因圖。使用串接 API 的方式將迷因圖呈現在畫面上，輸入文字後便可以下載該迷因圖。">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://i.imgur.com/OixZDnw.gif">
+<meta property="og:image" content="https://i.imgur.com/xa7u0Xa.png">
+<meta property="og:image" content="https://i.imgur.com/aRyql7i.jpg">
+<meta property="og:image" content="https://i.imgur.com/nOkeqfK.gif">
+<meta property="og:image" content="https://i.imgur.com/gKqMmkh.png">
+<meta property="og:image" content="https://i.imgur.com/mWGDJl0.png">
+<meta property="og:image" content="https://i.imgur.com/RcQb6Un.png">
+<meta property="og:image" content="https://i.imgur.com/r2J4zae.png">
+<meta property="article:published_time" content="2021-04-15T14:15:32.000Z">
+<meta property="article:modified_time" content="2023-08-05T14:34:24.198Z">
+<meta property="article:author" content="Winnie">
+<meta property="article:tag" content="react">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/OixZDnw.gif">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/blog/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>React Meme Generator 實作</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"
+    ><i class="fa-solid fa-bars fa-lg"></i
+  ></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"
+    ><i class="fa-solid fa-bars fa-lg"></i
+  ></a>
+  <a
+    id="top-icon-tablet"
+    href="#"
+    aria-label="Top"
+    onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"
+    style="display: none"
+    ><i class="fa-solid fa-chevron-up fa-lg"></i
+  ></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       -->
+        <li>
+          <a href="/blog/"
+            >首頁</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a href="/blog/about/"
+            >關於</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a href="/blog/archives/"
+            >文章</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a target="_blank" rel="noopener" href="http://github.com/winnie0609"
+            >專案</a
+          >
+        </li>
+        <!--
+     -->
+      </ul>
+    </span>
+    <br />
+    <span id="actions">
+      <ul>
+        
+        <li>
+          <a
+            class="icon"
+            aria-label="上一篇"
+            href="/blog/2021/04/17/react-movie-app/"
+            ><i
+              class="fa-solid fa-chevron-left"
+              aria-hidden="true"
+              onmouseover="$('#i-prev').toggle();"
+              onmouseout="$('#i-prev').toggle();"
+            ></i
+          ></a>
+        </li>
+         
+        <li>
+          <a
+            class="icon"
+            aria-label="下一篇"
+            href="/blog/2021/04/13/react-todo-list/"
+            ><i
+              class="fa-solid fa-chevron-right"
+              aria-hidden="true"
+              onmouseover="$('#i-next').toggle();"
+              onmouseout="$('#i-next').toggle();"
+            ></i
+          ></a>
+        </li>
+        
+        <li>
+          <a
+            class="icon"
+            aria-label="回到頁首"
+            href="#"
+            onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"
+            ><i
+              class="fa-solid fa-chevron-up"
+              aria-hidden="true"
+              onmouseover="$('#i-top').toggle();"
+              onmouseout="$('#i-top').toggle();"
+            ></i
+          ></a>
+        </li>
+        <li>
+          <a class="icon" aria-label="分享" href="#"
+            ><i
+              class="fa-solid fa-share-alt"
+              aria-hidden="true"
+              onmouseover="$('#i-share').toggle();"
+              onmouseout="$('#i-share').toggle();"
+              onclick="$('#share').toggle();return false;"
+            ></i
+          ></a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display: none"
+        >上一篇</span
+      >
+      <span id="i-next" class="info" style="display: none"
+        >下一篇</span
+      >
+      <span id="i-top" class="info" style="display: none"
+        >回到頁首</span
+      >
+      <span id="i-share" class="info" style="display: none"
+        >分享</span
+      >
+    </span>
+    <br />
+    <div id="share" style="display: none">
+      <ul>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://winnie0609.github.io/blog/2021/04/15/react-meme-generator/"
+      ><i class="fab fa-facebook " aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://twitter.com/share?url=https://winnie0609.github.io/blog/2021/04/15/react-meme-generator/&text=React Meme Generator 實作"
+      ><i class="fab fa-twitter " aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://winnie0609.github.io/blog/2021/04/15/react-meme-generator/&title=React Meme Generator 實作"
+      ><i class="fab fa-linkedin " aria-hidden="true"></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://winnie0609.github.io/blog/2021/04/15/react-meme-generator/&is_video=false&description=React Meme Generator 實作"
+      ><i class="fab fa-pinterest " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <li>
+    <a
+      class="icon"
+      href="mailto:?subject=React Meme Generator 實作&body=Check out this article: https://winnie0609.github.io/blog/2021/04/15/react-meme-generator/"
+      ><i
+        class="fa-solid fa-envelope "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://winnie0609.github.io/blog/2021/04/15/react-meme-generator/&title=React Meme Generator 實作"
+      ><i
+        class="fab fa-get-pocket "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://winnie0609.github.io/blog/2021/04/15/react-meme-generator/&title=React Meme Generator 實作"
+      ><i class="fab fa-reddit " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://winnie0609.github.io/blog/2021/04/15/react-meme-generator/&title=React Meme Generator 實作"
+      ><i
+        class="fab fa-stumbleupon "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://digg.com/submit?url=https://winnie0609.github.io/blog/2021/04/15/react-meme-generator/&title=React Meme Generator 實作"
+      ><i class="fab fa-digg " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://winnie0609.github.io/blog/2021/04/15/react-meme-generator/&name=React Meme Generator 實作&description="
+      ><i class="fab fa-tumblr " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://winnie0609.github.io/blog/2021/04/15/react-meme-generator/&t=React Meme Generator 實作"
+      ><i
+        class="fab fa-hacker-news "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+</ul>
+
+    </div>
+     
+    <div id="toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B0%A1%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">簡介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">2.</span> <span class="toc-text">功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E4%BD%9C%E6%A5%AD"><span class="toc-number">3.</span> <span class="toc-text">前置作業</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A5%E9%A9%9F"><span class="toc-number">4.</span> <span class="toc-text">步驟</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#fetch-API"><span class="toc-number">4.1.</span> <span class="toc-text">fetch API</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%BB%9E%E6%93%8A%E6%A8%A1%E6%9D%BF%EF%BC%8C%E9%80%B2%E5%85%A5%E8%A9%B2%E6%A8%A1%E6%9D%BF%E9%80%B2%E8%A1%8C%E7%B7%A8%E8%BC%AF"><span class="toc-number">4.2.</span> <span class="toc-text">點擊模板，進入該模板進行編輯</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A3%BD%E4%BD%9C%E8%AE%93%E7%94%A8%E6%88%B6%E8%BC%B8%E5%85%A5%E7%9A%84%E6%A1%86%E6%A1%86"><span class="toc-number">4.3.</span> <span class="toc-text">製作讓用戶輸入的框框</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E9%81%8E-API-%E5%B0%87%E7%94%A8%E6%88%B6%E7%9A%84%E8%B3%87%E6%96%99%E6%94%BE%E5%88%B0%E7%85%A7%E7%89%87%E4%B8%8A"><span class="toc-number">4.4.</span> <span class="toc-text">通過 API 將用戶的資料放到照片上</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8A%93%E5%8F%96%E7%94%A8%E6%88%B6%E8%BC%B8%E5%85%A5%E7%9A%84%E8%B3%87%E6%96%99"><span class="toc-number">4.4.1.</span> <span class="toc-text">抓取用戶輸入的資料</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A8%AD%E5%AE%9A%E9%BB%9E%E6%93%8A-submit-button-%E5%BE%8C%E6%9C%83%E5%9F%B7%E8%A1%8C%E7%9A%84%E5%8B%95%E4%BD%9C"><span class="toc-number">4.4.2.</span> <span class="toc-text">設定點擊 submit button 後會執行的動作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A1%AF%E7%A4%BA%E5%B7%B2%E7%B6%93%E5%AE%8C%E6%88%90%E7%9A%84%E8%BF%B7%E5%9B%A0%E5%9C%96"><span class="toc-number">4.4.3.</span> <span class="toc-text">顯示已經完成的迷因圖</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%B5%90"><span class="toc-number">5.</span> <span class="toc-text">小結</span></a></li></ol></div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        React Meme Generator 實作
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Winnie</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-04-15T14:15:32.000Z" class="dt-published" itemprop="datePublished">2021-04-15</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/blog/tags/react/" rel="tag">react</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p><a target="_blank" rel="noopener" href="https://github.com/Winnie0609/meme-generator">Github</a><br><a href="https://winnie0609.github.io/meme-generator/">Live Demo</a></p>
+<p><a target="_blank" rel="noopener" href="https://i.imgur.com/OixZDnw.gif"><img src="https://i.imgur.com/OixZDnw.gif" alt="Meme Generator Demo"></a></p>
+<h2 id="簡介"><a href="#簡介" class="headerlink" title="簡介"></a>簡介</h2><p>Meme Generator 提供用戶製作迷因圖。使用串接 API 的方式將迷因圖呈現在畫面上，輸入文字後便可以下載該迷因圖。</p>
+<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><ul>
+<li>提供用戶挑選迷因模板</li>
+<li>提供用戶輸入文字</li>
+<li>提供圖片下載</li>
+</ul>
+<h2 id="前置作業"><a href="#前置作業" class="headerlink" title="前置作業"></a>前置作業</h2><ol>
+<li>先看 meme api 所提供的文件</li>
+<li>申請此網站的賬號（之後在處理 caption 環節時候會用到）</li>
+<li>把 username 和 password 存在 env file</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// .env</span></span><br><span class="line"><span class="comment">// 前綴要加上 REACT\_APP 不然無法直接引用</span></span><br><span class="line"><span class="comment">// 不需要額外安裝其他的套件</span></span><br><span class="line"></span><br><span class="line"><span class="variable constant_">REACT_APP_IMGFLIP_USERNAME</span> = 用戶名;</span><br><span class="line"><span class="variable constant_">REACT_APP_IMGFLIP_PASSWORD</span> = 密碼;</span><br></pre></td></tr></table></figure>
+
+<h2 id="步驟"><a href="#步驟" class="headerlink" title="步驟"></a>步驟</h2><h3 id="fetch-API"><a href="#fetch-API" class="headerlink" title="fetch API"></a>fetch API</h3><p><a target="_blank" rel="noopener" href="https://api.imgflip.com/get_memes">https://api.imgflip.com/get_memes</a><br>抓取到的資料共有 100 筆，資料如照片所示。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//filename : App.js</span></span><br><span class="line"><span class="keyword">const</span> [templates, setTemplates] = <span class="title function_">useState</span>([]);</span><br><span class="line"></span><br><span class="line"><span class="title function_">useEffect</span>(</span><br><span class="line">  <span class="title function_">fetch</span>(<span class="string">&#x27;https://api.imgflip.com/get_memes&#x27;</span>)</span><br><span class="line">    .<span class="title function_">then</span>(<span class="function">(<span class="params">res</span>) =&gt;</span> res.<span class="title function_">json</span>())</span><br><span class="line">    .<span class="title function_">then</span>(<span class="function">(<span class="params">json</span>) =&gt;</span> <span class="title function_">setTemplates</span>(json.<span class="property">data</span>.<span class="property">memes</span>)),</span><br><span class="line">  []</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://i.imgur.com/xa7u0Xa.png"><img src="https://i.imgur.com/xa7u0Xa.png"></a></p>
+<p>把抓取到的資料呈現到畫面上。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// App.js</span></span><br><span class="line"><span class="keyword">return</span> (</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    &#123;templates.map((template) =&gt; &#123;</span></span><br><span class="line"><span class="language-xml">      return (</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">img</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">style</span>=<span class="string">&#123;&#123;</span> <span class="attr">width:</span> &#x27;<span class="attr">200px</span>&#x27; &#125;&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">key</span>=<span class="string">&#123;template.id&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">src</span>=<span class="string">&#123;template.url&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">alt</span>=<span class="string">&#123;template.name&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        /&gt;</span></span></span><br><span class="line"><span class="language-xml">      );</span></span><br><span class="line"><span class="language-xml">    &#125;)&#125;</span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://i.imgur.com/aRyql7i.jpg"><img src="https://i.imgur.com/aRyql7i.jpg"></a></p>
+<h3 id="點擊模板，進入該模板進行編輯"><a href="#點擊模板，進入該模板進行編輯" class="headerlink" title="點擊模板，進入該模板進行編輯"></a>點擊模板，進入該模板進行編輯</h3><p>點擊模板的動作可以使用 state 來處理。設置 template state，預設為 null，點擊後更新為該 template. 當 template 為 null 時，顯示所有模板；template 被更新後就顯示被點擊的模板以及供用戶輸入的框框。因為兩個地方都會用到模板，因此把模板拆成獨立的 component。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [template, setTemplate] = <span class="title function_">useState</span>(<span class="literal">null</span>);</span><br><span class="line"><span class="comment">//設定template的初始值為null</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> (</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    //如果點擊了圖片的情況</span></span><br><span class="line"><span class="language-xml">    &#123;template &amp;&amp; <span class="tag">&lt;<span class="name">Meme</span> <span class="attr">template</span>=<span class="string">&#123;template&#125;</span> /&gt;</span>&#125;</span></span><br><span class="line"><span class="language-xml">    //如果沒有點擊圖片的情況</span></span><br><span class="line"><span class="language-xml">    &#123;!template &amp;&amp;</span></span><br><span class="line"><span class="language-xml">      templates.map((template) =&gt; &#123;</span></span><br><span class="line"><span class="language-xml">        return (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">Meme</span> <span class="attr">template</span>=<span class="string">&#123;template&#125;</span> <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> setTemplate(template)&#125; /&gt;</span></span><br><span class="line"><span class="language-xml">        );</span></span><br><span class="line"><span class="language-xml">      &#125;)&#125;</span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// meme.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">React</span> <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Meme</span>(<span class="params">&#123; template, onClick &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&#123;template.url&#125;</span> <span class="attr">alt</span>=<span class="string">&#123;template.name&#125;</span> <span class="attr">onClick</span>=<span class="string">&#123;onClick&#125;</span> /&gt;</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">Meme</span>;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://i.imgur.com/nOkeqfK.gif"><img src="https://i.imgur.com/nOkeqfK.gif"></a></p>
+<h3 id="製作讓用戶輸入的框框"><a href="#製作讓用戶輸入的框框" class="headerlink" title="製作讓用戶輸入的框框"></a>製作讓用戶輸入的框框</h3><p>使用 form 製作框框分別為 top text 以及 buttom text. 在 return 中，照片的位置下加入 form，form 內包含 2 個 input。另外加入 submit button 做提交資料用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  template &amp;&amp; (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">form</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">onSubmit</span>=<span class="string">&#123;(e)</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-xml">        e.prevertDefault();</span></span><br><span class="line"><span class="language-xml">      &#125;&#125;</span></span><br><span class="line"><span class="language-xml">    &gt;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Meme</span> <span class="attr">template</span>=<span class="string">&#123;template&#125;</span> /&gt;</span> //圖片顯示</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">placeholder</span>=<span class="string">&quot;top text&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">placeholder</span>=<span class="string">&quot;buttom text&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span>&gt;</span> Generate <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="通過-API-將用戶的資料放到照片上"><a href="#通過-API-將用戶的資料放到照片上" class="headerlink" title="通過 API 將用戶的資料放到照片上"></a>通過 API 將用戶的資料放到照片上</h3><ul>
+<li>抓取用戶輸入的資料</li>
+<li>設定點擊 submit button 後會執行的動作</li>
+<li>使用 imgflip 網站提供的 image caption url 獲取已完成的迷因圖</li>
+<li>如果成功獲取已經完成的迷因圖就顯示該圖片</li>
+</ul>
+<h4 id="抓取用戶輸入的資料"><a href="#抓取用戶輸入的資料" class="headerlink" title="抓取用戶輸入的資料"></a>抓取用戶輸入的資料</h4><p>用戶需要輸入的框框有兩個，分別為 top text 和 bottom text，都使用 state 來更新他們的 value.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// App.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> [topText, setTopText] = <span class="title function_">useState</span>(<span class="string">&quot;&quot;</span>)</span><br><span class="line"><span class="keyword">const</span> [bottomText, setBottomText] = <span class="title function_">useState</span>(<span class="string">&quot;&quot;</span>)</span><br><span class="line"></span><br><span class="line">&lt;input</span><br><span class="line">  placeholder = <span class="string">&quot;top text&quot;</span></span><br><span class="line">  value = &#123;topText&#125;</span><br><span class="line">  onChange=&#123;<span class="function">(<span class="params">e</span>) =&gt;</span> <span class="title function_">setTopText</span>(e.<span class="property">target</span>.<span class="property">value</span>)&#125;</span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://i.imgur.com/gKqMmkh.png"><img src="https://i.imgur.com/gKqMmkh.png"></a></p>
+<h4 id="設定點擊-submit-button-後會執行的動作"><a href="#設定點擊-submit-button-後會執行的動作" class="headerlink" title="設定點擊 submit button 後會執行的動作"></a>設定點擊 submit button 後會執行的動作</h4><p>點擊 submit 之後，會去 fetch 設定到的 url 格式，這裡使用 async await 來處理。設定 url 的格式：需要 template_id, text0, text1, 用戶名, password.</p>
+<p><a target="_blank" rel="noopener" href="https://i.imgur.com/mWGDJl0.png"><img src="https://i.imgur.com/mWGDJl0.png"></a><br><a target="_blank" rel="noopener" href="https://i.imgur.com/RcQb6Un.png"><img src="https://i.imgur.com/RcQb6Un.png"></a></p>
+<p>url 需要的參數通過 <code>objectToQueryParams</code> 傳入. 成功獲取資料後 json 回傳的是一個有已經完成的迷因圖的 url」 和是否成功的提示。將這個 url 存在 meme status 中。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//App.js</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//引入存在 env file 的資訊</span></span><br><span class="line"><span class="keyword">const</span> username = process.<span class="property">env</span>.<span class="property">REACT_APP_IMGFLIP_USERNAME</span>;</span><br><span class="line"><span class="keyword">const</span> password = process.<span class="property">env</span>.<span class="property">REACT_APP_IMGFLIP_PASSWORD</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//設定 url 格式</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">objectToQueryParam</span> = (<span class="params">obj</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> params = <span class="title class_">Object</span>.<span class="title function_">entries</span>(obj).<span class="title function_">map</span>(<span class="function">(<span class="params">[key, value]</span>) =&gt;</span> <span class="string">`<span class="subst">$&#123;key&#125;</span>=<span class="subst">$&#123;value&#125;</span>`</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&#x27;?&#x27;</span> + params.<span class="title function_">join</span>(<span class="string">&#x27;&amp;&#x27;</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">form</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">  <span class="attr">onSubmit</span>=<span class="string">&#123;async</span> (<span class="attr">e</span>) =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-xml">    e.preventDefault();</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">    const params = &#123;</span></span><br><span class="line"><span class="language-xml">      template_id: template.id,</span></span><br><span class="line"><span class="language-xml">      text0: topText,</span></span><br><span class="line"><span class="language-xml">      text1: bottomText,</span></span><br><span class="line"><span class="language-xml">      username: username,</span></span><br><span class="line"><span class="language-xml">      password: password,</span></span><br><span class="line"><span class="language-xml">    &#125;;</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">    const response = await fetch(</span></span><br><span class="line"><span class="language-xml">      `https://api.imgflip.com/caption\_image$&#123;objectToQueryParam(params)&#125;`</span></span><br><span class="line"><span class="language-xml">    );</span></span><br><span class="line"><span class="language-xml">    const json = await response.json();</span></span><br><span class="line"><span class="language-xml">    setMeme(json.data.url);</span></span><br><span class="line"><span class="language-xml">  &#125;&#125;</span></span><br><span class="line"><span class="language-xml">/&gt;</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="顯示已經完成的迷因圖"><a href="#顯示已經完成的迷因圖" class="headerlink" title="顯示已經完成的迷因圖"></a>顯示已經完成的迷因圖</h4><p>將這個 url 存在 meme status 中，如果 meme 有資料，則顯示那張已經完成的迷因圖。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//App.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (meme) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h2</span>&gt;</span>Feel free to download your meme.<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&#123;meme&#125;</span> <span class="attr">alt</span>=<span class="string">&quot;custom meme&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://i.imgur.com/r2J4zae.png"><img src="https://i.imgur.com/r2J4zae.png"></a></p>
+<h2 id="小結"><a href="#小結" class="headerlink" title="小結"></a>小結</h2><p>上面的解說都只截取了部分的程式碼，看起來會有一些亂，文末附了完整的程式碼，參照著看會比較清楚。這是一個功能比較單一的迷因產生器，目前只能製作只需要輸入兩段文字的迷因，需要超過兩段文字的迷因圖，文字位置會措置，這個之後再回來修嘿。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/blog/">首頁</a></li>
+        
+          <li><a href="/blog/about/">關於</a></li>
+        
+          <li><a href="/blog/archives/">文章</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/winnie0609">專案</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B0%A1%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">簡介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">2.</span> <span class="toc-text">功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E4%BD%9C%E6%A5%AD"><span class="toc-number">3.</span> <span class="toc-text">前置作業</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A5%E9%A9%9F"><span class="toc-number">4.</span> <span class="toc-text">步驟</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#fetch-API"><span class="toc-number">4.1.</span> <span class="toc-text">fetch API</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%BB%9E%E6%93%8A%E6%A8%A1%E6%9D%BF%EF%BC%8C%E9%80%B2%E5%85%A5%E8%A9%B2%E6%A8%A1%E6%9D%BF%E9%80%B2%E8%A1%8C%E7%B7%A8%E8%BC%AF"><span class="toc-number">4.2.</span> <span class="toc-text">點擊模板，進入該模板進行編輯</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A3%BD%E4%BD%9C%E8%AE%93%E7%94%A8%E6%88%B6%E8%BC%B8%E5%85%A5%E7%9A%84%E6%A1%86%E6%A1%86"><span class="toc-number">4.3.</span> <span class="toc-text">製作讓用戶輸入的框框</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E9%81%8E-API-%E5%B0%87%E7%94%A8%E6%88%B6%E7%9A%84%E8%B3%87%E6%96%99%E6%94%BE%E5%88%B0%E7%85%A7%E7%89%87%E4%B8%8A"><span class="toc-number">4.4.</span> <span class="toc-text">通過 API 將用戶的資料放到照片上</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8A%93%E5%8F%96%E7%94%A8%E6%88%B6%E8%BC%B8%E5%85%A5%E7%9A%84%E8%B3%87%E6%96%99"><span class="toc-number">4.4.1.</span> <span class="toc-text">抓取用戶輸入的資料</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A8%AD%E5%AE%9A%E9%BB%9E%E6%93%8A-submit-button-%E5%BE%8C%E6%9C%83%E5%9F%B7%E8%A1%8C%E7%9A%84%E5%8B%95%E4%BD%9C"><span class="toc-number">4.4.2.</span> <span class="toc-text">設定點擊 submit button 後會執行的動作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A1%AF%E7%A4%BA%E5%B7%B2%E7%B6%93%E5%AE%8C%E6%88%90%E7%9A%84%E8%BF%B7%E5%9B%A0%E5%9C%96"><span class="toc-number">4.4.3.</span> <span class="toc-text">顯示已經完成的迷因圖</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%B5%90"><span class="toc-number">5.</span> <span class="toc-text">小結</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://winnie0609.github.io/blog/2021/04/15/react-meme-generator/"
+      ><i class="fab fa-facebook fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://twitter.com/share?url=https://winnie0609.github.io/blog/2021/04/15/react-meme-generator/&text=React Meme Generator 實作"
+      ><i class="fab fa-twitter fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://winnie0609.github.io/blog/2021/04/15/react-meme-generator/&title=React Meme Generator 實作"
+      ><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://winnie0609.github.io/blog/2021/04/15/react-meme-generator/&is_video=false&description=React Meme Generator 實作"
+      ><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <li>
+    <a
+      class="icon"
+      href="mailto:?subject=React Meme Generator 實作&body=Check out this article: https://winnie0609.github.io/blog/2021/04/15/react-meme-generator/"
+      ><i
+        class="fa-solid fa-envelope fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://winnie0609.github.io/blog/2021/04/15/react-meme-generator/&title=React Meme Generator 實作"
+      ><i
+        class="fab fa-get-pocket fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://winnie0609.github.io/blog/2021/04/15/react-meme-generator/&title=React Meme Generator 實作"
+      ><i class="fab fa-reddit fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://winnie0609.github.io/blog/2021/04/15/react-meme-generator/&title=React Meme Generator 實作"
+      ><i
+        class="fab fa-stumbleupon fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://digg.com/submit?url=https://winnie0609.github.io/blog/2021/04/15/react-meme-generator/&title=React Meme Generator 實作"
+      ><i class="fab fa-digg fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://winnie0609.github.io/blog/2021/04/15/react-meme-generator/&name=React Meme Generator 實作&description="
+      ><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://winnie0609.github.io/blog/2021/04/15/react-meme-generator/&t=React Meme Generator 實作"
+      ><i
+        class="fab fa-hacker-news fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 選單</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 文章目錄</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 頁首</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    &copy;
+    
+    
+    2023
+    Winnie 
+    | Powered by <a href="hexo.io/">Hexo</a> & <a target="_blank" rel="noopener" href="https://github.com/probberechts/hexo-theme-cactus">Cactus</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/blog/">首頁</a></li><!--
+     --><!--
+       --><li><a href="/blog/about/">關於</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">文章</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/winnie0609">專案</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"複製\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "已複製！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
