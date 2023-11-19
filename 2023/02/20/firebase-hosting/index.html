@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="網站部署有很多不同的服務可以選擇，比如說 Firebase Hosting, AWS Amplify Hosting, GitHub Pages 或是 Vercel. 現在類似的服務都頗方便，很多時候只要下幾個指令或是點一點就可以部署成功，更新 code 後自動部署的功能也都能做到，可以根據自己的需求選擇不同的平台。 因為專案使用了 Firebase 的其他功能，所以選擇了 firebase ho">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何將 React 專案部署到 Firebase Hosting">
+<meta property="og:url" content="https://winnie0609.github.io/blog/2023/02/20/firebase-hosting/index.html">
+<meta property="og:site_name" content="Winnie&#39;s blog">
+<meta property="og:description" content="網站部署有很多不同的服務可以選擇，比如說 Firebase Hosting, AWS Amplify Hosting, GitHub Pages 或是 Vercel. 現在類似的服務都頗方便，很多時候只要下幾個指令或是點一點就可以部署成功，更新 code 後自動部署的功能也都能做到，可以根據自己的需求選擇不同的平台。 因為專案使用了 Firebase 的其他功能，所以選擇了 firebase ho">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://winnie0609.github.io/blog/images/hosting.png">
+<meta property="article:published_time" content="2023-02-20T13:33:45.000Z">
+<meta property="article:modified_time" content="2023-11-19T15:19:04.366Z">
+<meta property="article:author" content="Winnie">
+<meta property="article:tag" content="Firebase">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://winnie0609.github.io/blog/images/hosting.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/blog/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>如何將 React 專案部署到 Firebase Hosting</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"
+    ><i class="fa-solid fa-bars fa-lg"></i
+  ></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"
+    ><i class="fa-solid fa-bars fa-lg"></i
+  ></a>
+  <a
+    id="top-icon-tablet"
+    href="#"
+    aria-label="Top"
+    onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"
+    style="display: none"
+    ><i class="fa-solid fa-chevron-up fa-lg"></i
+  ></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       -->
+        <li>
+          <a href="/blog/"
+            >首頁</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a href="/blog/about/"
+            >關於</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a href="/blog/archives/"
+            >文章</a
+          >
+        </li>
+        <!--
+     --><!--
+       -->
+        <li>
+          <a target="_blank" rel="noopener" href="http://github.com/winnie0609"
+            >專案</a
+          >
+        </li>
+        <!--
+     -->
+      </ul>
+    </span>
+    <br />
+    <span id="actions">
+      <ul>
+        
+        <li>
+          <a
+            class="icon"
+            aria-label="上一篇"
+            href="/blog/2023/02/28/slack-incoming-webhook/"
+            ><i
+              class="fa-solid fa-chevron-left"
+              aria-hidden="true"
+              onmouseover="$('#i-prev').toggle();"
+              onmouseout="$('#i-prev').toggle();"
+            ></i
+          ></a>
+        </li>
+         
+        <li>
+          <a
+            class="icon"
+            aria-label="下一篇"
+            href="/blog/2023/02/15/flatlist-virtualizedLists-should-never-be-nested-inside-plain-ScrollViews/"
+            ><i
+              class="fa-solid fa-chevron-right"
+              aria-hidden="true"
+              onmouseover="$('#i-next').toggle();"
+              onmouseout="$('#i-next').toggle();"
+            ></i
+          ></a>
+        </li>
+        
+        <li>
+          <a
+            class="icon"
+            aria-label="回到頁首"
+            href="#"
+            onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"
+            ><i
+              class="fa-solid fa-chevron-up"
+              aria-hidden="true"
+              onmouseover="$('#i-top').toggle();"
+              onmouseout="$('#i-top').toggle();"
+            ></i
+          ></a>
+        </li>
+        <li>
+          <a class="icon" aria-label="分享" href="#"
+            ><i
+              class="fa-solid fa-share-alt"
+              aria-hidden="true"
+              onmouseover="$('#i-share').toggle();"
+              onmouseout="$('#i-share').toggle();"
+              onclick="$('#share').toggle();return false;"
+            ></i
+          ></a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display: none"
+        >上一篇</span
+      >
+      <span id="i-next" class="info" style="display: none"
+        >下一篇</span
+      >
+      <span id="i-top" class="info" style="display: none"
+        >回到頁首</span
+      >
+      <span id="i-share" class="info" style="display: none"
+        >分享</span
+      >
+    </span>
+    <br />
+    <div id="share" style="display: none">
+      <ul>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://winnie0609.github.io/blog/2023/02/20/firebase-hosting/"
+      ><i class="fab fa-facebook " aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://twitter.com/share?url=https://winnie0609.github.io/blog/2023/02/20/firebase-hosting/&text=如何將 React 專案部署到 Firebase Hosting"
+      ><i class="fab fa-twitter " aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://winnie0609.github.io/blog/2023/02/20/firebase-hosting/&title=如何將 React 專案部署到 Firebase Hosting"
+      ><i class="fab fa-linkedin " aria-hidden="true"></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://winnie0609.github.io/blog/2023/02/20/firebase-hosting/&is_video=false&description=如何將 React 專案部署到 Firebase Hosting"
+      ><i class="fab fa-pinterest " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <li>
+    <a
+      class="icon"
+      href="mailto:?subject=如何將 React 專案部署到 Firebase Hosting&body=Check out this article: https://winnie0609.github.io/blog/2023/02/20/firebase-hosting/"
+      ><i
+        class="fa-solid fa-envelope "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://winnie0609.github.io/blog/2023/02/20/firebase-hosting/&title=如何將 React 專案部署到 Firebase Hosting"
+      ><i
+        class="fab fa-get-pocket "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://winnie0609.github.io/blog/2023/02/20/firebase-hosting/&title=如何將 React 專案部署到 Firebase Hosting"
+      ><i class="fab fa-reddit " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://winnie0609.github.io/blog/2023/02/20/firebase-hosting/&title=如何將 React 專案部署到 Firebase Hosting"
+      ><i
+        class="fab fa-stumbleupon "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://digg.com/submit?url=https://winnie0609.github.io/blog/2023/02/20/firebase-hosting/&title=如何將 React 專案部署到 Firebase Hosting"
+      ><i class="fab fa-digg " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://winnie0609.github.io/blog/2023/02/20/firebase-hosting/&name=如何將 React 專案部署到 Firebase Hosting&description="
+      ><i class="fab fa-tumblr " aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://winnie0609.github.io/blog/2023/02/20/firebase-hosting/&t=如何將 React 專案部署到 Firebase Hosting"
+      ><i
+        class="fab fa-hacker-news "
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+</ul>
+
+    </div>
+     
+    <div id="toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A5%E9%A9%9F"><span class="toc-number">1.</span> <span class="toc-text">步驟</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%83%E8%80%83%E8%B3%87%E6%96%99"><span class="toc-number">2.</span> <span class="toc-text">參考資料</span></a></li></ol></div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        如何將 React 專案部署到 Firebase Hosting
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Winnie</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-02-20T13:33:45.000Z" class="dt-published" itemprop="datePublished">2023-02-20</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/blog/tags/Firebase/" rel="tag">Firebase</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>網站部署有很多不同的服務可以選擇，比如說 Firebase Hosting, AWS Amplify Hosting, GitHub Pages 或是 Vercel. 現在類似的服務都頗方便，很多時候只要下幾個指令或是點一點就可以部署成功，更新 code 後自動部署的功能也都能做到，可以根據自己的需求選擇不同的平台。</p>
+<p>因為專案使用了 Firebase 的其他功能，所以選擇了 firebase hosting. 這裡小小記錄部署過程。</p>
+<h2 id="步驟"><a href="#步驟" class="headerlink" title="步驟"></a>步驟</h2><ol>
+<li>在 firebase 創建專案。只要跟著引導一步一步完成就可以了。</li>
+<li>進入 firebase console 的 hosting，這裡會出現所有部署過的網站。每個專案可以創建不只一個網站，連結的 url 也是不一樣的。點擊 <code>Add another site</code> 新增一個網站。</li>
+</ol>
+<p><img src="/blog/images/hosting.png" alt="hosting"></p>
+<ol start="3">
+<li>安裝 Firebase CLI. 如果專案只有在部署時會用到 firebase CLI，可以設置為 dev 依賴，而非全域安裝。</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add firebase-tools --dev</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>初始化專案，選擇需要的功能，這裡是 hosting. 專案在 init 完之後，會出現 <code>firebase.json</code> 這個檔案。</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">firebase init</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li><p>在根目錄找到 <code>firebase.json</code>，這裡可以更改設定。</p>
+<ul>
+<li>target: 新開的網站的名字，預設會是 Firebase 專案的名字</li>
+<li>public: build 完要部署的檔案，react 通常會是 <code>build</code> 這個檔案</li>
+<li>rewrites: 預設沒有這段。這裡可以設定 redirect，如果要讓不存在的頁面都 redirect 到某一頁的時候可以在這裡設定。這裡設定不存在的頁面會導到 <code>index.html</code> , 沒有設定的情況下會導到 <code>404.html</code>.</li>
+</ul>
+ <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;hosting&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;target&quot;</span><span class="punctuation">:</span> <span class="string">&quot;website-target&quot;</span><span class="punctuation">,</span> <span class="comment">//設定 target</span></span><br><span class="line">    <span class="attr">&quot;public&quot;</span><span class="punctuation">:</span> <span class="string">&quot;build&quot;</span><span class="punctuation">,</span>          <span class="comment">//build 完要部署的檔案，react 通常會是 `build`</span></span><br><span class="line">    <span class="attr">&quot;ignore&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;firebase.json&quot;</span><span class="punctuation">,</span> <span class="string">&quot;**/.*&quot;</span><span class="punctuation">,</span> <span class="string">&quot;**/node_modules/**&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;rewrites&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;source&quot;</span><span class="punctuation">:</span> <span class="string">&quot;**&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;destination&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/index.html&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>build 頁面。build 完的靜態文件會出現根目錄的 <code>build</code> 檔案裡。</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn build</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>指定 target。一般情況下不需要另外指定 target，Firebase CLI 會自動專案連接到預設的 Firebase 專案。範例的 Firebase 專案裡有兩個以上的網站，所以需要指定 target. </p>
+<p> <code>new-website</code> 是 <code>firebase.json</code> 裡設定的 target，<code>website-name</code> 則是在步驟 2 新增網站的時候選擇的名字。</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">firebase target:apply hosting website-target website-name</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>部署網站。部署結束之後就可以使用 Firebase 提供的URL 訪問網站。</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">firebase deploy --only hosting:website-target</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>程式碼更新後，只需要重複執行第 6 步和第 8 步的相應操作就可完成網站的重新部署。另外，這裡解決了兩個需求；一、如何在同一個 Firebase 專案中建立多個網站並設定不同的 URL。二、如何設定網站在頁面不存在時的 Redirect。預設情況下，Firebase Hosting 會顯示 404 頁面，但通過設定 <code>firebase.json</code> 中的 <code>rewrites</code>，可以將不存在的頁面重定向回首頁或其他指定頁面。</p>
+<p>另外如果是部署純靜態的網頁不需要提供 Web credentials, Firebase Hosting 可以直接提供靜態網頁內容。</p>
+<h2 id="參考資料"><a href="#參考資料" class="headerlink" title="參考資料"></a>參考資料</h2><p><a target="_blank" rel="noopener" href="https://tintinve.medium.com/deploy-two-web-site-web-apps-on-a-single-firebase-project-1f87ce4ae77e">Firebase: one project with two different websites on different URLs.</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/blog/">首頁</a></li>
+        
+          <li><a href="/blog/about/">關於</a></li>
+        
+          <li><a href="/blog/archives/">文章</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/winnie0609">專案</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A5%E9%A9%9F"><span class="toc-number">1.</span> <span class="toc-text">步驟</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%83%E8%80%83%E8%B3%87%E6%96%99"><span class="toc-number">2.</span> <span class="toc-text">參考資料</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://winnie0609.github.io/blog/2023/02/20/firebase-hosting/"
+      ><i class="fab fa-facebook fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://twitter.com/share?url=https://winnie0609.github.io/blog/2023/02/20/firebase-hosting/&text=如何將 React 專案部署到 Firebase Hosting"
+      ><i class="fab fa-twitter fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://winnie0609.github.io/blog/2023/02/20/firebase-hosting/&title=如何將 React 專案部署到 Firebase Hosting"
+      ><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://winnie0609.github.io/blog/2023/02/20/firebase-hosting/&is_video=false&description=如何將 React 專案部署到 Firebase Hosting"
+      ><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <li>
+    <a
+      class="icon"
+      href="mailto:?subject=如何將 React 專案部署到 Firebase Hosting&body=Check out this article: https://winnie0609.github.io/blog/2023/02/20/firebase-hosting/"
+      ><i
+        class="fa-solid fa-envelope fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li>
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://winnie0609.github.io/blog/2023/02/20/firebase-hosting/&title=如何將 React 專案部署到 Firebase Hosting"
+      ><i
+        class="fab fa-get-pocket fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://winnie0609.github.io/blog/2023/02/20/firebase-hosting/&title=如何將 React 專案部署到 Firebase Hosting"
+      ><i class="fab fa-reddit fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://winnie0609.github.io/blog/2023/02/20/firebase-hosting/&title=如何將 React 專案部署到 Firebase Hosting"
+      ><i
+        class="fab fa-stumbleupon fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://digg.com/submit?url=https://winnie0609.github.io/blog/2023/02/20/firebase-hosting/&title=如何將 React 專案部署到 Firebase Hosting"
+      ><i class="fab fa-digg fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://winnie0609.github.io/blog/2023/02/20/firebase-hosting/&name=如何將 React 專案部署到 Firebase Hosting&description="
+      ><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i
+    ></a>
+  </li> -->
+  <!-- <li>
+    <a
+      class="icon"
+      target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://winnie0609.github.io/blog/2023/02/20/firebase-hosting/&t=如何將 React 專案部署到 Firebase Hosting"
+      ><i
+        class="fab fa-hacker-news fa-lg"
+        aria-hidden="true"
+      ></i
+    ></a>
+  </li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 選單</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 文章目錄</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 頁首</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    &copy;
+    
+    
+    2023
+    Winnie 
+    | Powered by <a href="hexo.io/">Hexo</a> & <a target="_blank" rel="noopener" href="https://github.com/probberechts/hexo-theme-cactus">Cactus</a>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/blog/">首頁</a></li><!--
+     --><!--
+       --><li><a href="/blog/about/">關於</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">文章</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/winnie0609">專案</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"複製\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "已複製！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
